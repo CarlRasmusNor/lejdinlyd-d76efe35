@@ -41,7 +41,7 @@ const AboutSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.35 }}
             >
-              Som ung iværksætter oplevede jeg gang på gang, at vennerne og jeg stod uden ordentlig lyd til vores fester og sammenkomster – enten var det for dyrt at leje, eller også var kvaliteten skuffende. Så jeg tænkte: <span className="text-foreground font-medium">det må kunne gøres bedre.</span>
+              Som ung nordjysk iværksætter oplevede jeg gang på gang, at vennerne og jeg stod uden ordentlig lyd til vores fester og sammenkomster – enten var det for dyrt at leje, eller også var kvaliteten skuffende. Så jeg tænkte: <span className="text-foreground font-medium">det må kunne gøres bedre.</span>
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -56,6 +56,14 @@ const AboutSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.65 }}
+            >
+              Heroppe i Nordjylland handler vi på tillid og et håndtryk. Det er den måde jeg driver LejDinLyd på – <span className="text-foreground font-medium">tillidsbaseret og ukompliceret.</span> Du får højtaleren, nyder din fest, og leverer den tilbage. Simpelt som det.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.8 }}
               className="text-foreground font-medium"
             >
               Min mission er enkel: god lyd skal være tilgængelig for alle – uanset budget.

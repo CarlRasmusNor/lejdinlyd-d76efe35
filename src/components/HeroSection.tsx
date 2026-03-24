@@ -8,8 +8,8 @@ const HeroSection = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-          src={heroImage}
-          alt="Soundboks Go højttaler til fest"
+          src={heroBg}
+          alt="Hyggeligt udendørs arrangement"
           className="w-full h-full object-cover"
           width={1920}
           height={1080}

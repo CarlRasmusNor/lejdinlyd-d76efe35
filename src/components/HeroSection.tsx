@@ -45,7 +45,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6 }}
             className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-6"
           >
-            LydNu
+            LejDinLyd
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}

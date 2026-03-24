@@ -21,7 +21,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-6 flex items-center justify-between h-16">
         <a href="#" className="font-heading font-bold text-xl text-primary">
-          LydNu
+          LejDinLyd
         </a>
 
         {/* Desktop */}

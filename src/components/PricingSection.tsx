@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { CalendarDays, PartyPopper } from "lucide-react";
+import { CalendarDays, PartyPopper, Music } from "lucide-react";
 
 const PricingSection = () => {
   return (
     <section id="priser" className="py-24 px-6">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -18,7 +18,7 @@ const PricingSection = () => {
           <p className="text-muted-foreground text-lg">Ingen skjulte gebyrer. Ingen overraskelser.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -46,6 +46,27 @@ const PricingSection = () => {
               <p className="font-heading text-5xl font-bold text-foreground mb-1">300 <span className="text-xl font-normal text-muted-foreground">DKK</span></p>
               <p className="text-muted-foreground">per dag</p>
             </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="rounded-2xl border border-border bg-card p-8 text-center flex flex-col justify-between"
+          >
+            <div>
+              <Music className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground text-sm uppercase tracking-wider font-heading mb-2">Festivaler & Events</p>
+              <p className="font-heading text-2xl font-bold text-foreground mb-2">Specialpris</p>
+              <p className="text-muted-foreground text-sm mb-6">Kontakt os for et skræddersyet tilbud til din festival eller større event.</p>
+            </div>
+            <a
+              href="#kontakt"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-primary text-primary font-heading font-semibold text-sm hover:bg-primary hover:text-primary-foreground transition-all"
+            >
+              Kontakt os
+            </a>
           </motion.div>
         </div>
       </div>

@@ -118,8 +118,12 @@ const HeroSection = () => {
             src={soundboksFront}
             alt="Soundboks Go"
             className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_60px_hsl(24_95%_53%/0.2)] relative z-10"
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 2, -2, 0],
+              scale: [1, 1.03, 1],
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
       </div>

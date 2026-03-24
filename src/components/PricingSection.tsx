@@ -4,7 +4,7 @@ import { CalendarDays, PartyPopper, Music } from "lucide-react";
 const PricingSection = () => {
   return (
     <section id="priser" className="py-24 px-6">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

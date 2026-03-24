@@ -11,11 +11,11 @@ const images = [
 
 const ProductShowcase = () => {
   return (
-    <section className="py-24 px-6 bg-secondary/30">
+    <section className="py-24 px-6 bg-secondary/30 overflow-hidden">
       <div className="container mx-auto max-w-5xl">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
@@ -32,17 +32,20 @@ const ProductShowcase = () => {
           {images.map((img, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, rotateY: -15 }}
+              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="flex items-center justify-center rounded-2xl border border-border bg-card p-8"
+              transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="flex items-center justify-center rounded-2xl border border-border bg-card p-8 group cursor-pointer hover:border-primary/30 transition-colors"
             >
-              <img
+              <motion.img
                 src={img.src}
                 alt={img.alt}
                 loading="lazy"
-                className="max-h-64 w-auto object-contain"
+                className="max-h-64 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                whileHover={{ rotate: [0, -2, 2, 0] }}
+                transition={{ duration: 0.5 }}
               />
             </motion.div>
           ))}

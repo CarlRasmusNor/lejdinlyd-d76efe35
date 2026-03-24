@@ -97,34 +97,62 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
           className="flex-1 flex justify-center relative"
         >
-          {/* Glow ring behind speaker */}
+          {/* Pulsing glow behind speaker */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center"
+            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.7, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-64 h-64 md:w-72 md:h-72 rounded-full bg-primary/20 blur-[80px]" />
+          </motion.div>
+
+          {/* Spinning ring 1 */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center"
             animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           >
-            <div className="w-72 h-72 md:w-80 md:h-80 rounded-full border border-primary/10" />
+            <div className="w-72 h-72 md:w-80 md:h-80 rounded-full border-2 border-primary/20 border-t-primary/60" />
           </motion.div>
+
+          {/* Spinning ring 2 */}
           <motion.div
             className="absolute inset-0 flex items-center justify-center"
             animate={{ rotate: -360 }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
           >
-            <div className="w-96 h-96 md:w-[26rem] md:h-[26rem] rounded-full border border-primary/5 border-dashed" />
+            <div className="w-96 h-96 md:w-[26rem] md:h-[26rem] rounded-full border border-primary/10 border-dashed border-b-primary/40" />
           </motion.div>
 
-          {/* Floating speaker */}
+          {/* Sound wave rings */}
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="absolute inset-0 flex items-center justify-center"
+              animate={{ scale: [1, 2.5], opacity: [0.4, 0] }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeOut",
+                delay: i * 0.8,
+              }}
+            >
+              <div className="w-48 h-48 rounded-full border border-primary/30" />
+            </motion.div>
+          ))}
+
+          {/* Floating speaker – party bounce */}
           <motion.img
             src={soundboksFront}
             alt="Soundboks Go"
-            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_60px_hsl(24_95%_53%/0.2)] relative z-10"
+            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_80px_hsl(24_95%_53%/0.35)] relative z-10"
             animate={{
-              y: [0, -25, 5, -15, 0],
-              x: [0, 15, -10, 20, -15, 0],
-              rotate: [0, 3, -4, 2, -3, 0],
-              scale: [1, 1.04, 0.98, 1.03, 1],
+              y: [0, -35, 10, -25, 15, -30, 0],
+              x: [0, 25, -20, 30, -25, 15, 0],
+              rotate: [0, 6, -8, 5, -6, 4, 0],
+              scale: [1, 1.07, 0.95, 1.06, 0.97, 1.04, 1],
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
       </div>

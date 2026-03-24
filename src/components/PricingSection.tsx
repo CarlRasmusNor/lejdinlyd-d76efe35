@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CalendarDays, PartyPopper } from "lucide-react";
+import { CalendarDays, PartyPopper, Music } from "lucide-react";
 
 const PricingSection = () => {
   return (

@@ -49,7 +49,7 @@ const AboutSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              Derfor grundlagde jeg LejDinLyd – en service hvor alle kan leje en <span className="text-primary font-medium">Soundboks Go</span> til en fair pris, uden bøvl. Ingen komplicerede kontrakter, ingen skjulte gebyrer. Bare fed lyd leveret til døren, klar til at tænde op for stemningen.
+              Derfor grundlagde jeg LydNu – en service hvor alle kan leje en <span className="text-primary font-medium">Soundboks Go</span> til en fair pris, uden bøvl. Ingen komplicerede kontrakter, ingen skjulte gebyrer. Bare fed lyd leveret til døren, klar til at tænde op for stemningen.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 15 }}

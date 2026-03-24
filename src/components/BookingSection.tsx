@@ -230,9 +230,9 @@ const BookingSection = () => {
                 <span className="font-heading text-3xl font-bold w-8 text-center">{speakerCount}</span>
                 <button
                   type="button"
-                  onClick={() => setSpeakerCount(Math.min(MAX_SPEAKERS, speakerCount + 1))}
+                  onClick={() => setSpeakerCount(Math.min(maxAvailableForRange, speakerCount + 1))}
                   className="w-10 h-10 rounded-lg border border-border bg-secondary flex items-center justify-center hover:border-primary/40 transition-colors disabled:opacity-30"
-                  disabled={speakerCount >= MAX_SPEAKERS}
+                  disabled={speakerCount >= maxAvailableForRange}
                 >
                   <Plus className="w-4 h-4" />
                 </button>

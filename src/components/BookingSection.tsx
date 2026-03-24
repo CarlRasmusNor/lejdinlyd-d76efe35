@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, Minus, Plus, CalendarIcon, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format, differenceInCalendarDays } from "date-fns";
+import { format, differenceInCalendarDays, eachDayOfInterval, parseISO } from "date-fns";
 import { da } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,41 @@ const BookingSection = () => {
   const [speakerCount, setSpeakerCount] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [bookedCounts, setBookedCounts] = useState<Record<string, number>>({});
+
+  // Fetch existing bookings to calculate availability per day
+  useEffect(() => {
+    const fetchBookings = async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("date_from, date_to, speaker_count");
+      if (error || !data) return;
+
+      const counts: Record<string, number> = {};
+      data.forEach((booking) => {
+        const from = parseISO(booking.date_from);
+        const to = booking.date_to ? parseISO(booking.date_to) : from;
+        const days = eachDayOfInterval({ start: from, end: to });
+        days.forEach((day) => {
+          const key = format(day, "yyyy-MM-dd");
+          counts[key] = (counts[key] || 0) + booking.speaker_count;
+        });
+      });
+      setBookedCounts(counts);
+    };
+    fetchBookings();
+  }, [submitted]);
+
+  const getSoldOut = (date: Date) => {
+    const key = format(date, "yyyy-MM-dd");
+    const booked = bookedCounts[key] || 0;
+    return booked >= MAX_SPEAKERS;
+  };
+
+  const getAvailableSpeakers = (date: Date) => {
+    const key = format(date, "yyyy-MM-dd");
+    return MAX_SPEAKERS - (bookedCounts[key] || 0);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,6 +117,21 @@ const BookingSection = () => {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  // Calculate max available speakers across selected date range
+  const maxAvailableForRange = useMemo(() => {
+    if (!dateRange?.from) return MAX_SPEAKERS;
+    const end = dateRange.to ?? dateRange.from;
+    const days = eachDayOfInterval({ start: dateRange.from, end });
+    return Math.min(...days.map(getAvailableSpeakers));
+  }, [dateRange, bookedCounts]);
+
+  // Clamp speaker count when range changes
+  useEffect(() => {
+    if (speakerCount > maxAvailableForRange) {
+      setSpeakerCount(Math.max(1, maxAvailableForRange));
+    }
+  }, [maxAvailableForRange]);
 
   const inputClass = "w-full rounded-lg border border-border bg-secondary px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition font-body";
 
@@ -149,10 +199,16 @@ const BookingSection = () => {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={da}
-                    disabled={(date) => date < today}
+                    disabled={(date) => date < today || getSoldOut(date)}
                     className="pointer-events-auto"
                     numberOfMonths={1}
+                    modifiers={{ soldOut: (date) => date >= today && getSoldOut(date) }}
+                    modifiersClassNames={{ soldOut: "sold-out-day" }}
                   />
+                  <div className="px-3 pb-3 pt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="inline-block w-3 h-3 rounded-sm bg-destructive/20 border border-destructive/40" />
+                    Udsolgt
+                  </div>
                 </PopoverContent>
               </Popover>
             </div>
@@ -174,9 +230,9 @@ const BookingSection = () => {
                 <span className="font-heading text-3xl font-bold w-8 text-center">{speakerCount}</span>
                 <button
                   type="button"
-                  onClick={() => setSpeakerCount(Math.min(MAX_SPEAKERS, speakerCount + 1))}
+                  onClick={() => setSpeakerCount(Math.min(maxAvailableForRange, speakerCount + 1))}
                   className="w-10 h-10 rounded-lg border border-border bg-secondary flex items-center justify-center hover:border-primary/40 transition-colors disabled:opacity-30"
-                  disabled={speakerCount >= MAX_SPEAKERS}
+                  disabled={speakerCount >= maxAvailableForRange}
                 >
                   <Plus className="w-4 h-4" />
                 </button>

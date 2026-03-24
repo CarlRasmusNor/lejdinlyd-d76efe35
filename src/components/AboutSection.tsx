@@ -24,7 +24,7 @@ const AboutSection = () => {
             Historien bag
           </p>
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">
-            Om <span className="text-primary">LydNu</span>
+            Om <span className="text-primary">LejDinLyd</span>
           </h2>
           <div className="space-y-4 text-muted-foreground text-base md:text-lg leading-relaxed">
             <motion.p

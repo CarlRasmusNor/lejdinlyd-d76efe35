@@ -53,8 +53,9 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-2xl mb-6"
           >
-            Lej en Soundboks Go{" "}
-            <span className="text-primary">nemt og hurtigt</span>
+            <span className="whitespace-nowrap">Lej en Soundboks Go</span>
+            <br />
+            <span className="text-primary whitespace-nowrap">nemt og hurtigt</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

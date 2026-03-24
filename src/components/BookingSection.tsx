@@ -205,7 +205,7 @@ const BookingSection = () => {
                     modifiers={{ soldOut: (date) => date >= today && getSoldOut(date) }}
                     modifiersClassNames={{ soldOut: "sold-out-day" }}
                   />
-                  <div className="px-3 pb-3 pt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="px-3 pb-3 pt-1 flex items-center gap-2 text-xs text-foreground/80">
                     <span className="inline-block w-3 h-3 rounded-sm bg-destructive/20 border border-destructive/40" />
                     Udsolgt
                   </div>

@@ -23,6 +23,41 @@ const BookingSection = () => {
   const [speakerCount, setSpeakerCount] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [bookedCounts, setBookedCounts] = useState<Record<string, number>>({});
+
+  // Fetch existing bookings to calculate availability per day
+  useEffect(() => {
+    const fetchBookings = async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("date_from, date_to, speaker_count");
+      if (error || !data) return;
+
+      const counts: Record<string, number> = {};
+      data.forEach((booking) => {
+        const from = parseISO(booking.date_from);
+        const to = booking.date_to ? parseISO(booking.date_to) : from;
+        const days = eachDayOfInterval({ start: from, end: to });
+        days.forEach((day) => {
+          const key = format(day, "yyyy-MM-dd");
+          counts[key] = (counts[key] || 0) + booking.speaker_count;
+        });
+      });
+      setBookedCounts(counts);
+    };
+    fetchBookings();
+  }, [submitted]);
+
+  const getSoldOut = (date: Date) => {
+    const key = format(date, "yyyy-MM-dd");
+    const booked = bookedCounts[key] || 0;
+    return booked >= MAX_SPEAKERS;
+  };
+
+  const getAvailableSpeakers = (date: Date) => {
+    const key = format(date, "yyyy-MM-dd");
+    return MAX_SPEAKERS - (bookedCounts[key] || 0);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

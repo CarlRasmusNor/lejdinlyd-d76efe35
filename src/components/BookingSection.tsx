@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Send, Minus, Plus, CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, differenceInCalendarDays } from "date-fns";
 import { da } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 
 const MAX_SPEAKERS = 2;
+
+const getRate = (date: Date) => {
+  const day = date.getDay();
+  return day === 5 || day === 6 ? 300 : 150;
+};
 
 const BookingSection = () => {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
@@ -29,6 +34,28 @@ const BookingSection = () => {
     }
     return `${format(dateRange.from, "d. MMM", { locale: da })} – ${format(dateRange.to, "d. MMM yyyy", { locale: da })}`;
   };
+
+  const priceBreakdown = useMemo(() => {
+    if (!dateRange?.from) return null;
+    const end = dateRange.to ?? dateRange.from;
+    const days = differenceInCalendarDays(end, dateRange.from) + 1;
+    let total = 0;
+    let weekdayDays = 0;
+    let weekendDays = 0;
+
+    for (let i = 0; i < days; i++) {
+      const d = new Date(dateRange.from);
+      d.setDate(d.getDate() + i);
+      const rate = getRate(d);
+      if (rate === 300) weekendDays++;
+      else weekdayDays++;
+      total += rate;
+    }
+
+    total *= speakerCount;
+
+    return { days, weekdayDays, weekendDays, total };
+  }, [dateRange, speakerCount]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -64,6 +91,9 @@ const BookingSection = () => {
             <p className="text-muted-foreground mb-4">Vi vender tilbage hurtigst muligt.</p>
             <div className="text-sm text-muted-foreground space-y-1">
               <p><span className="text-foreground font-medium">{speakerCount} højttaler{speakerCount > 1 ? "e" : ""}</span> · {formatSelectedDates()}</p>
+              {priceBreakdown && (
+                <p className="text-primary font-heading font-bold text-lg mt-2">Total: {priceBreakdown.total} DKK</p>
+              )}
             </div>
           </motion.div>
         ) : (
@@ -129,6 +159,38 @@ const BookingSection = () => {
                 </button>
               </div>
             </div>
+
+            {/* Price breakdown */}
+            {priceBreakdown && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{ duration: 0.3 }}
+                className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-2"
+              >
+                <p className="font-heading font-semibold text-sm text-foreground mb-3">Prisberegning</p>
+                {priceBreakdown.weekdayDays > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {priceBreakdown.weekdayDays} hverdag{priceBreakdown.weekdayDays > 1 ? "e" : ""} × 150 DKK{speakerCount > 1 ? ` × ${speakerCount} stk` : ""}
+                    </span>
+                    <span className="text-foreground font-medium">{priceBreakdown.weekdayDays * 150 * speakerCount} DKK</span>
+                  </div>
+                )}
+                {priceBreakdown.weekendDays > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {priceBreakdown.weekendDays} weekenddag{priceBreakdown.weekendDays > 1 ? "e" : ""} × 300 DKK{speakerCount > 1 ? ` × ${speakerCount} stk` : ""}
+                    </span>
+                    <span className="text-foreground font-medium">{priceBreakdown.weekendDays * 300 * speakerCount} DKK</span>
+                  </div>
+                )}
+                <div className="border-t border-border pt-2 mt-2 flex justify-between">
+                  <span className="font-heading font-bold text-foreground">Total</span>
+                  <span className="font-heading font-bold text-primary text-lg">{priceBreakdown.total} DKK</span>
+                </div>
+              </motion.div>
+            )}
 
             {/* Contact fields */}
             <div className="grid sm:grid-cols-2 gap-5">

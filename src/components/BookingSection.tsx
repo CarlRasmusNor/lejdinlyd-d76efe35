@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Minus, Plus } from "lucide-react";
+import { Send, Minus, Plus, CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { da } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
+import { cn } from "@/lib/utils";
 
 const MAX_SPEAKERS = 2;
 

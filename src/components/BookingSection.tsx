@@ -199,10 +199,16 @@ const BookingSection = () => {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={da}
-                    disabled={(date) => date < today}
+                    disabled={(date) => date < today || getSoldOut(date)}
                     className="pointer-events-auto"
                     numberOfMonths={1}
+                    modifiers={{ soldOut: (date) => date >= today && getSoldOut(date) }}
+                    modifiersClassNames={{ soldOut: "sold-out-day" }}
                   />
+                  <div className="px-3 pb-3 pt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="inline-block w-3 h-3 rounded-sm bg-destructive/20 border border-destructive/40" />
+                    Udsolgt
+                  </div>
                 </PopoverContent>
               </Popover>
             </div>

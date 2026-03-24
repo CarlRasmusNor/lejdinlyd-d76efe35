@@ -88,30 +88,31 @@ const ProductShowcase = () => {
           {images.map((img, i) => {
             const isCenter = i === 1;
             return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.7,
-                  delay: isCenter ? 0.1 : 0.25 + i * 0.1,
-                  ease: "easeOut",
-                }}
-                whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                className={`flex items-center justify-center rounded-2xl border border-border bg-card group cursor-pointer hover:border-primary/30 transition-colors ${
-                  isCenter ? "p-10 sm:-my-4 sm:scale-105 z-10" : "p-8"
-                }`}
-              >
-                <motion.img
-                  src={img.src}
-                  alt={img.alt}
-                  loading="lazy"
-                  className={`w-auto object-contain transition-transform duration-500 group-hover:scale-105 ${
-                    isCenter ? "max-h-80" : "max-h-56"
+              <a href="#priser" key={i}>
+                <motion.div
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.7,
+                    delay: isCenter ? 0.1 : 0.25 + i * 0.1,
+                    ease: "easeOut",
+                  }}
+                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                  className={`flex items-center justify-center rounded-2xl border border-border bg-card group cursor-pointer hover:border-primary/30 transition-colors ${
+                    isCenter ? "p-10 sm:-my-4 sm:scale-105 z-10" : "p-8"
                   }`}
-                />
-              </motion.div>
+                >
+                  <motion.img
+                    src={img.src}
+                    alt={img.alt}
+                    loading="lazy"
+                    className={`w-auto object-contain transition-transform duration-500 group-hover:scale-105 ${
+                      isCenter ? "max-h-80" : "max-h-56"
+                    }`}
+                  />
+                </motion.div>
+              </a>
             );
           })}
         </div>

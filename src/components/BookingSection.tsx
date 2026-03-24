@@ -22,11 +22,32 @@ const BookingSection = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [speakerCount, setSpeakerCount] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!dateRange?.from) return;
-    setSubmitted(true);
+    if (!dateRange?.from || !priceBreakdown) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("bookings").insert({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        message: formData.message || null,
+        date_from: format(dateRange.from, "yyyy-MM-dd"),
+        date_to: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
+        speaker_count: speakerCount,
+        total_price: priceBreakdown.total,
+      });
+      if (error) throw error;
+      setSubmitted(true);
+      toast.success("Booking modtaget!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Noget gik galt – prøv igen.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatSelectedDates = () => {

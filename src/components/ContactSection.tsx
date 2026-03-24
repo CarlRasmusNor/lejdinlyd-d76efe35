@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 const ContactSection = () => {
   return (
@@ -16,7 +16,7 @@ const ContactSection = () => {
           </h2>
           <p className="text-muted-foreground text-lg mb-10">Vi er klar til at hjælpe dig.</p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center flex-wrap">
             <a
               href="mailto:rasmuscarl@hotmail.com"
               className="flex items-center gap-3 rounded-xl border border-border bg-card px-6 py-4 hover:border-primary/40 transition-colors"
@@ -31,6 +31,15 @@ const ContactSection = () => {
               <Phone className="w-5 h-5 text-primary" />
               <span className="text-foreground">+45 53 54 00 96</span>
             </a>
+          </div>
+
+          <div className="mt-8 rounded-xl border border-border bg-card px-6 py-5 inline-flex items-center gap-3 mx-auto">
+            <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
+            <div className="text-left">
+              <p className="text-foreground font-medium">Afhentning & aflevering</p>
+              <p className="text-muted-foreground text-sm">Kjellerupsgade 4, 9000 Aalborg</p>
+              <p className="text-muted-foreground text-sm">Levering kun i Aalborg – kontakt os for aftale</p>
+            </div>
           </div>
         </motion.div>
       </div>

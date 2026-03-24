@@ -118,6 +118,21 @@ const BookingSection = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Calculate max available speakers across selected date range
+  const maxAvailableForRange = useMemo(() => {
+    if (!dateRange?.from) return MAX_SPEAKERS;
+    const end = dateRange.to ?? dateRange.from;
+    const days = eachDayOfInterval({ start: dateRange.from, end });
+    return Math.min(...days.map(getAvailableSpeakers));
+  }, [dateRange, bookedCounts]);
+
+  // Clamp speaker count when range changes
+  useEffect(() => {
+    if (speakerCount > maxAvailableForRange) {
+      setSpeakerCount(Math.max(1, maxAvailableForRange));
+    }
+  }, [maxAvailableForRange]);
+
   const inputClass = "w-full rounded-lg border border-border bg-secondary px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition font-body";
 
   return (

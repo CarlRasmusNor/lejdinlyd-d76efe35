@@ -75,8 +75,8 @@ html {
 
 .sold-out-day {
   position: relative;
-  background-color: hsl(var(--destructive) / 0.15) !important;
-  color: hsl(var(--muted-foreground)) !important;
+  background-color: hsl(var(--destructive) / 0.25) !important;
+  color: hsl(var(--foreground) / 0.7) !important;
   text-decoration: line-through;
-  opacity: 0.6;
+  opacity: 0.8;
 }

@@ -75,25 +75,33 @@ const BookingSection = () => {
             onSubmit={handleSubmit}
             className="rounded-2xl border border-border bg-card p-8 space-y-6"
           >
-            {/* Calendar */}
             <div>
               <label className="block font-heading font-semibold text-sm mb-3">Vælg dato(er)</label>
-              <div className="flex justify-center rounded-xl border border-border bg-secondary p-2">
-                <Calendar
-                  mode="range"
-                  selected={dateRange}
-                  onSelect={setDateRange}
-                  locale={da}
-                  disabled={(date) => date < today}
-                  className="pointer-events-auto"
-                  numberOfMonths={1}
-                />
-              </div>
-              {dateRange?.from && (
-                <p className="text-sm text-primary mt-2 text-center font-medium">
-                  {formatSelectedDates()}
-                </p>
-              )}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className={cn(
+                      "w-full rounded-lg border border-border bg-secondary px-4 py-3 text-left font-body text-sm flex items-center gap-2 hover:border-primary/40 transition-colors",
+                      !dateRange?.from && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="w-4 h-4" />
+                    {dateRange?.from ? formatSelectedDates() : "Vælg datoer..."}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    locale={da}
+                    disabled={(date) => date < today}
+                    className="pointer-events-auto"
+                    numberOfMonths={1}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             {/* Speaker count */}

@@ -77,6 +77,23 @@ const PricingSection = () => {
             </a>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-10 text-center"
+        >
+          <motion.a
+            href="#booking"
+            className="inline-flex items-center justify-center px-10 py-4 rounded-xl bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Book nu
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );

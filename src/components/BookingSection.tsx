@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Send, Minus, Plus, CalendarIcon } from "lucide-react";
+import { Send, Minus, Plus, CalendarIcon, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, differenceInCalendarDays } from "date-fns";
@@ -20,11 +22,32 @@ const BookingSection = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [speakerCount, setSpeakerCount] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!dateRange?.from) return;
-    setSubmitted(true);
+    if (!dateRange?.from || !priceBreakdown) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("bookings").insert({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        message: formData.message || null,
+        date_from: format(dateRange.from, "yyyy-MM-dd"),
+        date_to: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
+        speaker_count: speakerCount,
+        total_price: priceBreakdown.total,
+      });
+      if (error) throw error;
+      setSubmitted(true);
+      toast.success("Booking modtaget!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Noget gik galt – prøv igen.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatSelectedDates = () => {
@@ -202,10 +225,10 @@ const BookingSection = () => {
 
             <button
               type="submit"
-              disabled={!dateRange?.from}
-              className="w-full rounded-lg bg-primary text-primary-foreground font-heading font-semibold py-4 text-lg hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              disabled={!dateRange?.from || loading}
+              className="w-full rounded-lg bg-primary text-primary-foreground font-heading font-semibold py-4 text-lg hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Send booking-forespørgsel
+              {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Sender...</> : "Send booking-forespørgsel"}
             </button>
           </motion.form>
         )}

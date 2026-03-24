@@ -107,9 +107,20 @@ const ProductShowcase = () => {
                     src={img.src}
                     alt={img.alt}
                     loading="lazy"
-                    className={`w-auto object-contain transition-transform duration-500 group-hover:scale-105 ${
+                    className={`w-auto object-contain ${
                       isCenter ? "max-h-80" : "max-h-56"
                     }`}
+                    animate={{
+                      y: [0, -12, 5, -8, 0],
+                      rotate: [0, 2, -3, 1.5, 0],
+                      scale: [1, 1.03, 0.98, 1.02, 1],
+                    }}
+                    transition={{
+                      duration: 5 + i * 0.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: i * 0.6,
+                    }}
                   />
                 </motion.div>
               </a>

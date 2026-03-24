@@ -15,11 +15,11 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section id="faq" className="py-24 px-6 bg-secondary/30">
+    <section id="faq" className="py-24 px-6 bg-secondary/30 overflow-hidden">
       <div className="container mx-auto max-w-2xl">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
@@ -37,18 +37,25 @@ const FAQSection = () => {
         >
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, i) => (
-              <AccordionItem
+              <motion.div
                 key={i}
-                value={`item-${i}`}
-                className="rounded-xl border border-border bg-card px-6"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
               >
-                <AccordionTrigger className="font-heading font-semibold text-left hover:no-underline">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem
+                  value={`item-${i}`}
+                  className="rounded-xl border border-border bg-card px-6 hover:border-primary/20 transition-colors"
+                >
+                  <AccordionTrigger className="font-heading font-semibold text-left hover:no-underline">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
         </motion.div>

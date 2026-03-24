@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import heroImage from "@/assets/hero-speaker.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
 import soundboksFront from "@/assets/soundboks-front.png";
 
 const HeroSection = () => {

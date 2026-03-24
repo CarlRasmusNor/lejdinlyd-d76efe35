@@ -15,7 +15,7 @@
     --popover: 220 18% 10%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 38 90% 55%;
+    --primary: 24 95% 53%;
     --primary-foreground: 220 20% 7%;
 
     --secondary: 220 15% 15%;
@@ -24,7 +24,7 @@
     --muted: 220 15% 15%;
     --muted-foreground: 220 10% 55%;
 
-    --accent: 38 90% 55%;
+    --accent: 24 95% 53%;
     --accent-foreground: 220 20% 7%;
 
     --destructive: 0 84.2% 60.2%;
@@ -32,7 +32,7 @@
 
     --border: 220 15% 18%;
     --input: 220 15% 18%;
-    --ring: 38 90% 55%;
+    --ring: 24 95% 53%;
 
     --radius: 0.75rem;
 
@@ -48,9 +48,9 @@
     --font-heading: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
 
-    --gradient-gold: linear-gradient(135deg, hsl(38 90% 55%), hsl(28 85% 45%));
+    --gradient-gold: linear-gradient(135deg, hsl(24 95% 53%), hsl(14 90% 43%));
     --gradient-card: linear-gradient(180deg, hsl(220 18% 12%), hsl(220 18% 8%));
-    --shadow-glow: 0 0 40px hsl(38 90% 55% / 0.15);
+    --shadow-glow: 0 0 40px hsl(24 95% 53% / 0.15);
   }
 }
 

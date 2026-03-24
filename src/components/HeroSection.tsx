@@ -76,7 +76,7 @@ const HeroSection = () => {
           <img
             src={soundboksFront}
             alt="Soundboks Go"
-            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_40px_hsl(38_90%_55%/0.15)]"
+            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_40px_hsl(24_95%_53%/0.15)]"
           />
         </motion.div>
       </div>

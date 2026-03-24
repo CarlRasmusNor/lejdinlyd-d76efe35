@@ -1,0 +1,1 @@
+CREATE POLICY "Allow anonymous select for availability" ON public.bookings FOR SELECT TO anon USING (true);

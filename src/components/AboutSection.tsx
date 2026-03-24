@@ -57,7 +57,7 @@ const AboutSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.65 }}
             >
-              Heroppe i Nordjylland handler vi på tillid og et håndtryk. Det er den måde jeg driver LydNu på – <span className="text-foreground font-medium">tillidsbaseret og ukompliceret.</span> Du får højtaleren, nyder din fest, og leverer den tilbage. Simpelt som det.
+              Heroppe i Nordjylland handler vi på tillid og et håndtryk. Det er den måde jeg driver LejDinLyd på – <span className="text-foreground font-medium">tillidsbaseret og ukompliceret.</span> Du får højtaleren, nyder din fest, og leverer den tilbage. Simpelt som det.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 15 }}

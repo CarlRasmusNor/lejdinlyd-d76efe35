@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          created_at: string
+          date_from: string
+          date_to: string | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          speaker_count: number
+          total_price: number
+        }
+        Insert: {
+          created_at?: string
+          date_from: string
+          date_to?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          speaker_count?: number
+          total_price: number
+        }
+        Update: {
+          created_at?: string
+          date_from?: string
+          date_to?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          speaker_count?: number
+          total_price?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -9,6 +9,7 @@ import { format, differenceInCalendarDays, eachDayOfInterval, parseISO } from "d
 import { da } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
+import { z } from "zod";
 
 const MAX_SPEAKERS = 2;
 
@@ -17,6 +18,13 @@ const getRate = (date: Date) => {
   return day === 5 || day === 6 ? 300 : 150;
 };
 
+const bookingSchema = z.object({
+  name: z.string().trim().min(1, "Indtast dit navn"),
+  phone: z.string().trim().min(1, "Indtast dit telefonnummer").regex(/^[\d\s+()-]{6,20}$/, "Ugyldigt telefonnummer"),
+  email: z.string().trim().min(1, "Indtast din email").email("Ugyldig email-adresse"),
+  message: z.string().max(1000, "Beskeden er for lang (maks 1000 tegn)").optional(),
+});
+
 const BookingSection = () => {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -24,6 +32,7 @@ const BookingSection = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bookedCounts, setBookedCounts] = useState<Record<string, number>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Fetch existing bookings to calculate availability per day
   useEffect(() => {
@@ -61,14 +70,32 @@ const BookingSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!dateRange?.from || !priceBreakdown) return;
+    setFieldErrors({});
+
+    if (!dateRange?.from) {
+      toast.error("Vælg venligst en dato først.");
+      return;
+    }
+    if (!priceBreakdown) return;
+
+    const result = bookingSchema.safeParse(formData);
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const key = issue.path[0] as string;
+        if (!errors[key]) errors[key] = issue.message;
+      });
+      setFieldErrors(errors);
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase.from("bookings").insert({
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        message: formData.message || null,
+        name: result.data.name,
+        phone: result.data.phone,
+        email: result.data.email,
+        message: result.data.message || null,
         date_from: format(dateRange.from, "yyyy-MM-dd"),
         date_to: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
         speaker_count: speakerCount,
@@ -79,7 +106,14 @@ const BookingSection = () => {
       toast.success("Booking modtaget!");
     } catch (err) {
       console.error(err);
-      toast.error("Noget gik galt – prøv igen.");
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("row-level security")) {
+        toast.error("Booking kunne ikke gemmes – tjek at alle felter er udfyldt korrekt.");
+      } else if (msg.includes("duplicate")) {
+        toast.error("Denne booking findes allerede.");
+      } else {
+        toast.error("Noget gik galt – prøv igen om lidt.");
+      }
     } finally {
       setLoading(false);
     }
@@ -272,12 +306,24 @@ const BookingSection = () => {
             )}
 
             {/* Contact fields */}
-            <div className="grid sm:grid-cols-2 gap-5">
-              <input type="text" placeholder="Navn" required className={inputClass} value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} />
-              <input type="tel" placeholder="Telefonnummer" required className={inputClass} value={formData.phone} onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))} />
+            <div className="grid sm:grid-cols-2 gap-5 gap-y-4">
+              <div>
+                <input type="text" placeholder="Navn" required className={cn(inputClass, fieldErrors.name && "border-destructive ring-1 ring-destructive/30")} value={formData.name} onChange={e => { setFormData(p => ({ ...p, name: e.target.value })); setFieldErrors(p => ({ ...p, name: "" })); }} />
+                {fieldErrors.name && <p className="text-destructive text-xs mt-1 font-body">{fieldErrors.name}</p>}
+              </div>
+              <div>
+                <input type="tel" placeholder="Telefonnummer" required className={cn(inputClass, fieldErrors.phone && "border-destructive ring-1 ring-destructive/30")} value={formData.phone} onChange={e => { setFormData(p => ({ ...p, phone: e.target.value })); setFieldErrors(p => ({ ...p, phone: "" })); }} />
+                {fieldErrors.phone && <p className="text-destructive text-xs mt-1 font-body">{fieldErrors.phone}</p>}
+              </div>
             </div>
-            <input type="email" placeholder="Email" required className={inputClass} value={formData.email} onChange={e => setFormData(p => ({ ...p, email: e.target.value }))} />
-            <textarea placeholder="Besked (valgfrit)" rows={3} className={inputClass} value={formData.message} onChange={e => setFormData(p => ({ ...p, message: e.target.value }))} />
+            <div>
+              <input type="email" placeholder="Email" required className={cn(inputClass, fieldErrors.email && "border-destructive ring-1 ring-destructive/30")} value={formData.email} onChange={e => { setFormData(p => ({ ...p, email: e.target.value })); setFieldErrors(p => ({ ...p, email: "" })); }} />
+              {fieldErrors.email && <p className="text-destructive text-xs mt-1 font-body">{fieldErrors.email}</p>}
+            </div>
+            <div>
+              <textarea placeholder="Besked (valgfrit)" rows={3} className={cn(inputClass, fieldErrors.message && "border-destructive ring-1 ring-destructive/30")} value={formData.message} onChange={e => { setFormData(p => ({ ...p, message: e.target.value })); setFieldErrors(p => ({ ...p, message: "" })); }} />
+              {fieldErrors.message && <p className="text-destructive text-xs mt-1 font-body">{fieldErrors.message}</p>}
+            </div>
 
             <button
               type="submit"

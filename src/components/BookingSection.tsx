@@ -327,7 +327,7 @@ const BookingSection = () => {
               {fieldErrors.email && <p className="text-destructive text-xs mt-1 font-body">{fieldErrors.email}</p>}
             </div>
             <div>
-              <textarea placeholder="Besked (valgfrit)" rows={3} className={cn(inputClass, fieldErrors.message && "border-destructive ring-1 ring-destructive/30")} value={formData.message} onChange={e => { setFormData(p => ({ ...p, message: e.target.value })); setFieldErrors(p => ({ ...p, message: "" })); }} />
+              <textarea placeholder="Besked (valgfrit) – fx ønskes levering/afhentning, tidspunkt på dagen, eller andre ønsker" rows={3} className={cn(inputClass, fieldErrors.message && "border-destructive ring-1 ring-destructive/30")} value={formData.message} onChange={e => { setFormData(p => ({ ...p, message: e.target.value })); setFieldErrors(p => ({ ...p, message: "" })); }} />
               {fieldErrors.message && <p className="text-destructive text-xs mt-1 font-body">{fieldErrors.message}</p>}
             </div>
 

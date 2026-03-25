@@ -308,6 +308,7 @@ const BookingSection = () => {
                   <span className="font-heading font-bold text-foreground">Total</span>
                   <span className="font-heading font-bold text-primary text-lg">{priceBreakdown.total} DKK</span>
                 </div>
+                <p className="text-xs text-muted-foreground text-center mt-1">Betaling sker ved overlevering</p>
               </motion.div>
             )}
 

@@ -254,7 +254,7 @@ const BookingsTable = ({
         </thead>
         <tbody>
           {bookings.map((b) => (
-            <tr key={b.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+            <tr key={b.id} id={`booking-row-${b.id}`} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
               <td className="px-4 py-3">
                 <BookingStatusBadge status={b.status} />
               </td>

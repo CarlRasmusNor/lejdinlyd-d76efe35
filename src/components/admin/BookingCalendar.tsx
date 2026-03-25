@@ -15,6 +15,11 @@ type Booking = {
   status: string;
 };
 
+type DayInfo = {
+  bookings: Booking[];
+  totalSpeakers: number;
+};
+
 const statusColors: Record<string, string> = {
   pending: "bg-amber-500",
   confirmed: "bg-emerald-500",
@@ -28,25 +33,20 @@ const statusLabels: Record<string, string> = {
 };
 
 const BookingCalendar = ({ bookings }: { bookings: Booking[] }) => {
-  // Build map: date string → bookings on that day
-  const dateBookings = useMemo(() => {
-    const map: Record<string, Booking[]> = {};
+  const dateInfo = useMemo(() => {
+    const map: Record<string, DayInfo> = {};
     bookings.forEach((b) => {
       const from = parseISO(b.date_from);
       const to = b.date_to ? parseISO(b.date_to) : from;
       eachDayOfInterval({ start: from, end: to }).forEach((d) => {
         const key = format(d, "yyyy-MM-dd");
-        if (!map[key]) map[key] = [];
-        map[key].push(b);
+        if (!map[key]) map[key] = { bookings: [], totalSpeakers: 0 };
+        map[key].bookings.push(b);
+        map[key].totalSpeakers += b.speaker_count;
       });
     });
     return map;
   }, [bookings]);
-
-  const bookedDates = useMemo(
-    () => Object.keys(dateBookings).map((d) => parseISO(d)),
-    [dateBookings]
-  );
 
   return (
     <div className="rounded-xl border border-border bg-card p-6 space-y-4">
@@ -63,32 +63,37 @@ const BookingCalendar = ({ bookings }: { bookings: Booking[] }) => {
       </div>
 
       <Calendar
-        mode="multiple"
-        selected={bookedDates}
+        mode="default"
         locale={da}
         numberOfMonths={2}
         className="pointer-events-auto"
+        classNames={{
+          day_selected: "",
+        }}
         components={{
           DayContent: ({ date }) => {
             const key = format(date, "yyyy-MM-dd");
-            const dayBookings = dateBookings[key];
+            const info = dateInfo[key];
 
-            if (!dayBookings || dayBookings.length === 0) {
+            if (!info || info.bookings.length === 0) {
               return <span>{date.getDate()}</span>;
             }
 
             return (
               <Popover>
                 <PopoverTrigger asChild>
-                  <button type="button" className="relative w-full h-full flex flex-col items-center">
-                    <span>{date.getDate()}</span>
-                    <span className="flex gap-0.5 mt-0.5">
-                      {dayBookings.map((b, i) => (
+                  <button type="button" className="relative w-full h-full flex flex-col items-center gap-0.5">
+                    <span className="font-medium">{date.getDate()}</span>
+                    <span className="flex gap-0.5">
+                      {info.bookings.map((b, i) => (
                         <span
                           key={b.id + i}
                           className={cn("w-1.5 h-1.5 rounded-full", statusColors[b.status] || "bg-muted-foreground")}
                         />
                       ))}
+                    </span>
+                    <span className="text-[9px] leading-none text-muted-foreground font-medium">
+                      {info.totalSpeakers} stk
                     </span>
                   </button>
                 </PopoverTrigger>
@@ -96,7 +101,10 @@ const BookingCalendar = ({ bookings }: { bookings: Booking[] }) => {
                   <p className="font-heading font-semibold text-sm">
                     {format(date, "d. MMMM yyyy", { locale: da })}
                   </p>
-                  {dayBookings.map((b) => (
+                  <p className="text-xs text-muted-foreground">
+                    {info.totalSpeakers} højttaler{info.totalSpeakers !== 1 ? "e" : ""} i alt
+                  </p>
+                  {info.bookings.map((b) => (
                     <div
                       key={b.id}
                       className="flex items-start gap-2 text-xs border-t border-border pt-2"

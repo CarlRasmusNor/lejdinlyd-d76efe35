@@ -3,39 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2, Check, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-
-interface Booking {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  message: string | null;
-  date_from: string;
-  date_to: string | null;
-  speaker_count: number;
-  total_price: number;
-  created_at: string;
-  status: string;
-}
+import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
+import BookingActions from "@/components/admin/BookingActions";
+import EditBookingDialog, { type Booking } from "@/components/admin/EditBookingDialog";
 
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
+  const [editBooking, setEditBooking] = useState<Booking | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,30 +48,54 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
-  const handleConfirm = async (id: string) => {
+  const updateStatus = async (id: string, status: string) => {
     const { error } = await supabase
       .from("bookings")
-      .update({ status: "confirmed" } as any)
+      .update({ status } as any)
       .eq("id", id);
     if (error) {
-      toast.error("Kunne ikke bekræfte booking");
+      toast.error(`Kunne ikke opdatere status`);
       return;
     }
-    setBookings((prev) => prev.map((b) => b.id === id ? { ...b, status: "confirmed" } : b));
-    toast.success("Booking bekræftet");
+    setBookings((prev) => prev.map((b) => b.id === id ? { ...b, status } : b));
+    const labels: Record<string, string> = { confirmed: "Booking bekræftet", rejected: "Booking afvist" };
+    toast.success(labels[status] || "Status opdateret");
   };
 
   const handleDelete = async (id: string) => {
-    const { error } = await supabase
-      .from("bookings")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("bookings").delete().eq("id", id);
     if (error) {
       toast.error("Kunne ikke slette booking");
       return;
     }
     setBookings((prev) => prev.filter((b) => b.id !== id));
     toast.success("Booking slettet");
+  };
+
+  const handleSendEmail = async (booking: Booking) => {
+    setSendingEmail(booking.id);
+    try {
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "booking-confirmation",
+          recipientEmail: booking.email,
+          idempotencyKey: `booking-confirm-${booking.id}`,
+          templateData: {
+            name: booking.name,
+            dateFrom: booking.date_from,
+            dateTo: booking.date_to,
+            speakerCount: booking.speaker_count,
+            totalPrice: booking.total_price,
+          },
+        },
+      });
+      if (error) throw error;
+      toast.success(`Bekræftelses-email sendt til ${booking.email}`);
+    } catch {
+      toast.error("Email-infrastruktur er ikke sat op endnu. Kontakt support.");
+    } finally {
+      setSendingEmail(null);
+    }
   };
 
   const totalRevenue = bookings.reduce((sum, b) => sum + b.total_price, 0);
@@ -113,14 +117,12 @@ const AdminDashboard = () => {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard icon={<CalendarDays className="w-5 h-5 text-primary" />} label="Bookinger i alt" value={bookings.length} />
           <StatCard icon={<Users className="w-5 h-5 text-primary" />} label="Højttalere udlejet" value={bookings.reduce((s, b) => s + b.speaker_count, 0)} />
           <StatCard icon={<DollarSign className="w-5 h-5 text-primary" />} label="Omsætning" value={`${totalRevenue.toLocaleString("da-DK")} DKK`} />
         </div>
 
-        {/* Table */}
         {loading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -146,15 +148,7 @@ const AdminDashboard = () => {
                 {bookings.map((b) => (
                   <tr key={b.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
                     <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          b.status === "confirmed"
-                            ? "bg-green-500/10 text-green-600"
-                            : "bg-yellow-500/10 text-yellow-600"
-                        }`}
-                      >
-                        {b.status === "confirmed" ? "Bekræftet" : "Afventer"}
-                      </span>
+                      <BookingStatusBadge status={b.status} />
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {format(parseISO(b.date_from), "d. MMM", { locale: da })}
@@ -166,48 +160,15 @@ const AdminDashboard = () => {
                     <td className="px-4 py-3 text-center">{b.speaker_count}</td>
                     <td className="px-4 py-3 text-right font-medium text-primary">{b.total_price} DKK</td>
                     <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        {b.status !== "confirmed" && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleConfirm(b.id)}
-                            className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-500/10"
-                            title="Bekræft booking"
-                          >
-                            <Check className="w-4 h-4" />
-                          </Button>
-                        )}
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                              title="Slet booking"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Slet booking?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Er du sikker på, at du vil slette bookingen fra {b.name}? Denne handling kan ikke fortrydes.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuller</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(b.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              >
-                                Slet
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
+                      <BookingActions
+                        booking={b}
+                        onConfirm={(id) => updateStatus(id, "confirmed")}
+                        onReject={(id) => updateStatus(id, "rejected")}
+                        onDelete={handleDelete}
+                        onEdit={(booking) => { setEditBooking(booking); setEditOpen(true); }}
+                        onSendEmail={handleSendEmail}
+                        sendingEmail={sendingEmail}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -215,6 +176,15 @@ const AdminDashboard = () => {
             </table>
           </div>
         )}
+
+        <EditBookingDialog
+          booking={editBooking}
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          onSaved={(updated) => {
+            setBookings((prev) => prev.map((b) => b.id === updated.id ? updated : b));
+          }}
+        />
       </main>
     </div>
   );

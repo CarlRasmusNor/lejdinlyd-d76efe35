@@ -210,4 +210,73 @@ const StatCard = ({ icon, label, value }: { icon: React.ReactNode; label: string
   </div>
 );
 
+const BookingsTable = ({
+  title,
+  bookings,
+  onConfirm,
+  onReject,
+  onDelete,
+  onEdit,
+  onSendEmail,
+  sendingEmail,
+}: {
+  title: string;
+  bookings: Booking[];
+  onConfirm: (id: string) => void;
+  onReject: (id: string) => void;
+  onDelete: (id: string) => void;
+  onEdit: (booking: Booking) => void;
+  onSendEmail: (booking: Booking) => void;
+  sendingEmail: string | null;
+}) => (
+  <div className="space-y-2">
+    <h2 className="font-heading font-bold text-lg">{title}</h2>
+    <div className="rounded-xl border border-border overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-border bg-secondary/50">
+            <th className="text-left px-4 py-3 font-heading font-semibold">Status</th>
+            <th className="text-left px-4 py-3 font-heading font-semibold">Dato</th>
+            <th className="text-left px-4 py-3 font-heading font-semibold">Navn</th>
+            <th className="text-left px-4 py-3 font-heading font-semibold hidden sm:table-cell">Email</th>
+            <th className="text-left px-4 py-3 font-heading font-semibold hidden md:table-cell">Telefon</th>
+            <th className="text-center px-4 py-3 font-heading font-semibold">Stk</th>
+            <th className="text-right px-4 py-3 font-heading font-semibold">Pris</th>
+            <th className="text-right px-4 py-3 font-heading font-semibold">Handlinger</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.map((b) => (
+            <tr key={b.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+              <td className="px-4 py-3">
+                <BookingStatusBadge status={b.status} />
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                {format(parseISO(b.date_from), "d. MMM", { locale: da })}
+                {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM", { locale: da })}`}
+              </td>
+              <td className="px-4 py-3 font-medium">{b.name}</td>
+              <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{b.email}</td>
+              <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{b.phone}</td>
+              <td className="px-4 py-3 text-center">{b.speaker_count}</td>
+              <td className="px-4 py-3 text-right font-medium text-primary">{b.total_price} DKK</td>
+              <td className="px-4 py-3 text-right">
+                <BookingActions
+                  booking={b}
+                  onConfirm={onConfirm}
+                  onReject={onReject}
+                  onDelete={onDelete}
+                  onEdit={onEdit}
+                  onSendEmail={onSendEmail}
+                  sendingEmail={sendingEmail}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
 export default AdminDashboard;

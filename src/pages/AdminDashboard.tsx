@@ -164,7 +164,7 @@ const AdminDashboard = () => {
           />
         )}
 
-        <BookingCalendar bookings={bookings} onScrollToBooking={(id) => {
+        <BookingCalendar bookings={bookings.filter((b) => b.status !== "rejected")} onScrollToBooking={(id) => {
           const el = document.getElementById(`booking-row-${id}`);
           if (el) {
             el.scrollIntoView({ behavior: "smooth", block: "center" });

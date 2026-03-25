@@ -37,7 +37,7 @@ const statusLabels: Record<string, string> = {
   rejected: "Afvist",
 };
 
-const BookingCalendar = ({ bookings }: { bookings: Booking[] }) => {
+const BookingCalendar = ({ bookings, onScrollToBooking }: BookingCalendarProps) => {
   const dateInfo = useMemo(() => {
     const map: Record<string, DayInfo> = {};
     bookings.forEach((b) => {

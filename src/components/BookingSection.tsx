@@ -273,7 +273,7 @@ const BookingSection = () => {
               </div>
             </div>
             {dateRange?.from && maxAvailableForRange < MAX_SPEAKERS && maxAvailableForRange >= 1 && (
-              <p className="text-center text-xs text-amber-500 -mt-3 font-body">
+              <p className="text-center text-xs text-destructive -mt-3 font-body">
                 Kun {maxAvailableForRange} højttaler ledig på de valgte datoer – den anden er allerede booket.
               </p>
             )}

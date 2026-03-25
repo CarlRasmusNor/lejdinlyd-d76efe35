@@ -164,7 +164,14 @@ const AdminDashboard = () => {
           />
         )}
 
-        <BookingCalendar bookings={bookings} />
+        <BookingCalendar bookings={bookings} onScrollToBooking={(id) => {
+          const el = document.getElementById(`booking-row-${id}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.classList.add("ring-2", "ring-primary", "ring-offset-2");
+            setTimeout(() => el.classList.remove("ring-2", "ring-primary", "ring-offset-2"), 2000);
+          }
+        }} />
 
         <BookingChart bookings={bookings} />
 

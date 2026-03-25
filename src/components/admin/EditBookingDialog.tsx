@@ -54,6 +54,10 @@ const EditBookingDialog = ({ booking, open, onOpenChange, onSaved }: EditBooking
     });
   };
 
+  useEffect(() => {
+    if (booking && open) initFromBooking(booking);
+  }, [booking, open]);
+
   if (!booking) return null;
 
   return (

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";
 import EditBookingDialog, { type Booking } from "@/components/admin/EditBookingDialog";
+import BookingChart from "@/components/admin/BookingChart";
 
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -144,6 +145,8 @@ const AdminDashboard = () => {
           <StatCard icon={<Sun className="w-5 h-5 text-primary" />} label="Hverdage booket" value={weekdayBookings} />
           <StatCard icon={<PartyPopper className="w-5 h-5 text-primary" />} label="Weekenddage booket" value={weekendBookings} />
         </div>
+
+        <BookingChart bookings={bookings} />
 
         {loading ? (
           <div className="flex justify-center py-12">

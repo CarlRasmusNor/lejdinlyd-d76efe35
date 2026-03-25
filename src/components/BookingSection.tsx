@@ -200,7 +200,10 @@ const BookingSection = () => {
             <div className="text-sm text-muted-foreground space-y-1">
               <p><span className="text-foreground font-medium">{speakerCount} højttaler{speakerCount > 1 ? "e" : ""}</span> · {formatSelectedDates()}</p>
               {priceBreakdown && (
-                <p className="text-primary font-heading font-bold text-lg mt-2">Total: {priceBreakdown.total} DKK</p>
+                <>
+                  <p className="text-primary font-heading font-bold text-lg mt-2">Total: {priceBreakdown.total} DKK</p>
+                  <p className="text-xs text-muted-foreground">Betaling sker ved overlevering</p>
+                </>
               )}
             </div>
           </motion.div>

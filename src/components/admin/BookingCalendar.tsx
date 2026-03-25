@@ -15,6 +15,11 @@ type Booking = {
   status: string;
 };
 
+type BookingCalendarProps = {
+  bookings: Booking[];
+  onScrollToBooking?: (id: string) => void;
+};
+
 type DayInfo = {
   bookings: Booking[];
   totalSpeakers: number;

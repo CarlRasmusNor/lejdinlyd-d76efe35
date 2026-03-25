@@ -147,63 +147,42 @@ const AdminDashboard = () => {
           <StatCard icon={<PartyPopper className="w-5 h-5 text-primary" />} label="Weekenddage booket" value={weekendBookings} />
         </div>
 
-        <BookingChart bookings={bookings} />
+        {/* Pending bookings shown first for quick action */}
+        {!loading && pendingBookings.length > 0 && (
+          <BookingsTable
+            title="Afventende bookinger"
+            bookings={pendingBookings}
+            onConfirm={(id) => updateStatus(id, "confirmed")}
+            onReject={(id) => updateStatus(id, "rejected")}
+            onDelete={handleDelete}
+            onEdit={(booking) => { setEditBooking(booking); setEditOpen(true); }}
+            onSendEmail={handleSendEmail}
+            sendingEmail={sendingEmail}
+          />
+        )}
 
         <BookingCalendar bookings={bookings} />
+
+        <BookingChart bookings={bookings} />
 
         {loading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
-        ) : bookings.length === 0 ? (
+        ) : nonPendingBookings.length === 0 && pendingBookings.length === 0 ? (
           <p className="text-center text-muted-foreground py-12">Ingen bookinger endnu.</p>
-        ) : (
-          <div className="rounded-xl border border-border overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border bg-secondary/50">
-                  <th className="text-left px-4 py-3 font-heading font-semibold">Status</th>
-                  <th className="text-left px-4 py-3 font-heading font-semibold">Dato</th>
-                  <th className="text-left px-4 py-3 font-heading font-semibold">Navn</th>
-                  <th className="text-left px-4 py-3 font-heading font-semibold hidden sm:table-cell">Email</th>
-                  <th className="text-left px-4 py-3 font-heading font-semibold hidden md:table-cell">Telefon</th>
-                  <th className="text-center px-4 py-3 font-heading font-semibold">Stk</th>
-                  <th className="text-right px-4 py-3 font-heading font-semibold">Pris</th>
-                  <th className="text-right px-4 py-3 font-heading font-semibold">Handlinger</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.map((b) => (
-                  <tr key={b.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-                    <td className="px-4 py-3">
-                      <BookingStatusBadge status={b.status} />
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      {format(parseISO(b.date_from), "d. MMM", { locale: da })}
-                      {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM", { locale: da })}`}
-                    </td>
-                    <td className="px-4 py-3 font-medium">{b.name}</td>
-                    <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{b.email}</td>
-                    <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{b.phone}</td>
-                    <td className="px-4 py-3 text-center">{b.speaker_count}</td>
-                    <td className="px-4 py-3 text-right font-medium text-primary">{b.total_price} DKK</td>
-                    <td className="px-4 py-3 text-right">
-                      <BookingActions
-                        booking={b}
-                        onConfirm={(id) => updateStatus(id, "confirmed")}
-                        onReject={(id) => updateStatus(id, "rejected")}
-                        onDelete={handleDelete}
-                        onEdit={(booking) => { setEditBooking(booking); setEditOpen(true); }}
-                        onSendEmail={handleSendEmail}
-                        sendingEmail={sendingEmail}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        ) : nonPendingBookings.length > 0 ? (
+          <BookingsTable
+            title="Alle bookinger"
+            bookings={nonPendingBookings}
+            onConfirm={(id) => updateStatus(id, "confirmed")}
+            onReject={(id) => updateStatus(id, "rejected")}
+            onDelete={handleDelete}
+            onEdit={(booking) => { setEditBooking(booking); setEditOpen(true); }}
+            onSendEmail={handleSendEmail}
+            sendingEmail={sendingEmail}
+          />
+        ) : null}
 
         <EditBookingDialog
           booking={editBooking}

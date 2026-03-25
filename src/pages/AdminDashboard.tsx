@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, eachDayOfInterval } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2 } from "lucide-react";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper } from "lucide-react";
 import { toast } from "sonner";
 import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";
@@ -100,6 +100,24 @@ const AdminDashboard = () => {
 
   const totalRevenue = bookings.filter((b) => b.status !== "rejected").reduce((sum, b) => sum + b.total_price, 0);
 
+  const confirmedCount = bookings.filter((b) => b.status === "confirmed").length;
+  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+
+  const { weekdayBookings, weekendBookings } = bookings.filter((b) => b.status !== "rejected").reduce(
+    (acc, b) => {
+      const from = parseISO(b.date_from);
+      const to = b.date_to ? parseISO(b.date_to) : from;
+      const days = eachDayOfInterval({ start: from, end: to });
+      days.forEach((d) => {
+        const day = d.getDay();
+        if (day === 5 || day === 6) acc.weekendBookings++;
+        else acc.weekdayBookings++;
+      });
+      return acc;
+    },
+    { weekdayBookings: 0, weekendBookings: 0 }
+  );
+
   if (!authChecked) return null;
 
   return (
@@ -117,10 +135,14 @@ const AdminDashboard = () => {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           <StatCard icon={<CalendarDays className="w-5 h-5 text-primary" />} label="Bookinger i alt" value={bookings.length} />
-          <StatCard icon={<Users className="w-5 h-5 text-primary" />} label="Højttalere udlejet" value={bookings.reduce((s, b) => s + b.speaker_count, 0)} />
+          <StatCard icon={<CheckCircle className="w-5 h-5 text-primary" />} label="Bekræftede" value={confirmedCount} />
+          <StatCard icon={<Clock className="w-5 h-5 text-primary" />} label="Afventende" value={pendingCount} />
           <StatCard icon={<DollarSign className="w-5 h-5 text-primary" />} label="Omsætning" value={`${totalRevenue.toLocaleString("da-DK")} DKK`} />
+          <StatCard icon={<Users className="w-5 h-5 text-primary" />} label="Højttalere udlejet" value={bookings.filter((b) => b.status !== "rejected").reduce((s, b) => s + b.speaker_count, 0)} />
+          <StatCard icon={<Sun className="w-5 h-5 text-primary" />} label="Hverdage booket" value={weekdayBookings} />
+          <StatCard icon={<PartyPopper className="w-5 h-5 text-primary" />} label="Weekenddage booket" value={weekendBookings} />
         </div>
 
         {loading ? (

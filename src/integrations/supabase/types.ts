@@ -25,6 +25,7 @@ export type Database = {
           name: string
           phone: string
           speaker_count: number
+          status: string
           total_price: number
         }
         Insert: {
@@ -37,6 +38,7 @@ export type Database = {
           name: string
           phone: string
           speaker_count?: number
+          status?: string
           total_price: number
         }
         Update: {
@@ -49,6 +51,7 @@ export type Database = {
           name?: string
           phone?: string
           speaker_count?: number
+          status?: string
           total_price?: number
         }
         Relationships: []

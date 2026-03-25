@@ -3,7 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2 } from "lucide-react";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2, Check, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 interface Booking {
   id: string;
@@ -16,6 +29,7 @@ interface Booking {
   speaker_count: number;
   total_price: number;
   created_at: string;
+  status: string;
 }
 
 const AdminDashboard = () => {
@@ -43,7 +57,7 @@ const AdminDashboard = () => {
         .from("bookings")
         .select("*")
         .order("created_at", { ascending: false });
-      if (!error && data) setBookings(data);
+      if (!error && data) setBookings(data as unknown as Booking[]);
       setLoading(false);
     };
     fetchBookings();
@@ -52,6 +66,32 @@ const AdminDashboard = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/admin/login");
+  };
+
+  const handleConfirm = async (id: string) => {
+    const { error } = await supabase
+      .from("bookings")
+      .update({ status: "confirmed" } as any)
+      .eq("id", id);
+    if (error) {
+      toast.error("Kunne ikke bekræfte booking");
+      return;
+    }
+    setBookings((prev) => prev.map((b) => b.id === id ? { ...b, status: "confirmed" } : b));
+    toast.success("Booking bekræftet");
+  };
+
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase
+      .from("bookings")
+      .delete()
+      .eq("id", id);
+    if (error) {
+      toast.error("Kunne ikke slette booking");
+      return;
+    }
+    setBookings((prev) => prev.filter((b) => b.id !== id));
+    toast.success("Booking slettet");
   };
 
   const totalRevenue = bookings.reduce((sum, b) => sum + b.total_price, 0);
@@ -92,18 +132,30 @@ const AdminDashboard = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-secondary/50">
+                  <th className="text-left px-4 py-3 font-heading font-semibold">Status</th>
                   <th className="text-left px-4 py-3 font-heading font-semibold">Dato</th>
                   <th className="text-left px-4 py-3 font-heading font-semibold">Navn</th>
                   <th className="text-left px-4 py-3 font-heading font-semibold hidden sm:table-cell">Email</th>
                   <th className="text-left px-4 py-3 font-heading font-semibold hidden md:table-cell">Telefon</th>
                   <th className="text-center px-4 py-3 font-heading font-semibold">Stk</th>
                   <th className="text-right px-4 py-3 font-heading font-semibold">Pris</th>
-                  <th className="text-right px-4 py-3 font-heading font-semibold hidden lg:table-cell">Oprettet</th>
+                  <th className="text-right px-4 py-3 font-heading font-semibold">Handlinger</th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.map((b) => (
                   <tr key={b.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                          b.status === "confirmed"
+                            ? "bg-green-500/10 text-green-600"
+                            : "bg-yellow-500/10 text-yellow-600"
+                        }`}
+                      >
+                        {b.status === "confirmed" ? "Bekræftet" : "Afventer"}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {format(parseISO(b.date_from), "d. MMM", { locale: da })}
                       {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM", { locale: da })}`}
@@ -113,8 +165,49 @@ const AdminDashboard = () => {
                     <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{b.phone}</td>
                     <td className="px-4 py-3 text-center">{b.speaker_count}</td>
                     <td className="px-4 py-3 text-right font-medium text-primary">{b.total_price} DKK</td>
-                    <td className="px-4 py-3 text-right text-muted-foreground hidden lg:table-cell">
-                      {format(parseISO(b.created_at), "d. MMM HH:mm", { locale: da })}
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {b.status !== "confirmed" && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleConfirm(b.id)}
+                            className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-500/10"
+                            title="Bekræft booking"
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                        )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                              title="Slet booking"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Slet booking?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Er du sikker på, at du vil slette bookingen fra {b.name}? Denne handling kan ikke fortrydes.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Annuller</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(b.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Slet
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </td>
                   </tr>
                 ))}

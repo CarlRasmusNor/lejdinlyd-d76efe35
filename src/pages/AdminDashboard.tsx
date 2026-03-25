@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO, eachDayOfInterval } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper } from "lucide-react";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";
@@ -107,6 +107,8 @@ const AdminDashboard = () => {
 
   const confirmedCount = bookings.filter((b) => b.status === "confirmed").length;
   const pendingCount = pendingBookings.length;
+  const rejectedCount = bookings.filter((b) => b.status === "rejected").length;
+  const activeBookingsCount = bookings.filter((b) => b.status !== "rejected").length;
 
   const { weekdayBookings, weekendBookings } = bookings.filter((b) => b.status !== "rejected").reduce(
     (acc, b) => {
@@ -141,9 +143,10 @@ const AdminDashboard = () => {
 
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          <StatCard icon={<CalendarDays className="w-5 h-5 text-primary" />} label="Bookinger i alt" value={bookings.length} />
+          <StatCard icon={<CalendarDays className="w-5 h-5 text-primary" />} label="Bookinger i alt" value={activeBookingsCount} />
           <StatCard icon={<CheckCircle className="w-5 h-5 text-primary" />} label="Bekræftede" value={confirmedCount} />
           <StatCard icon={<Clock className="w-5 h-5 text-primary" />} label="Afventende" value={pendingCount} />
+          <StatCard icon={<XCircle className="w-5 h-5 text-destructive" />} label="Afviste" value={rejectedCount} />
           <StatCard icon={<DollarSign className="w-5 h-5 text-primary" />} label="Omsætning" value={`${totalRevenue.toLocaleString("da-DK")} DKK`} />
           <StatCard icon={<Users className="w-5 h-5 text-primary" />} label="Højttalere udlejet" value={bookings.filter((b) => b.status !== "rejected").reduce((s, b) => s + b.speaker_count, 0)} />
           <StatCard icon={<Sun className="w-5 h-5 text-primary" />} label="Hverdage booket" value={weekdayBookings} />

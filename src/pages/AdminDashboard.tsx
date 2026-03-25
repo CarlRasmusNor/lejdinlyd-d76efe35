@@ -98,7 +98,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const totalRevenue = bookings.reduce((sum, b) => sum + b.total_price, 0);
+  const totalRevenue = bookings.filter((b) => b.status !== "rejected").reduce((sum, b) => sum + b.total_price, 0);
 
   if (!authChecked) return null;
 

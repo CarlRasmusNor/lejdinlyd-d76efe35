@@ -39,7 +39,8 @@ const BookingSection = () => {
     const fetchBookings = async () => {
       const { data, error } = await supabase
         .from("bookings")
-        .select("date_from, date_to, speaker_count");
+        .select("date_from, date_to, speaker_count, status")
+        .neq("status", "rejected");
       if (error || !data) return;
 
       const counts: Record<string, number> = {};

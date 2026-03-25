@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO, eachDayOfInterval } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper } from "lucide-react";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";

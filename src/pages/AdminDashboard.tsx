@@ -107,6 +107,8 @@ const AdminDashboard = () => {
 
   const confirmedCount = bookings.filter((b) => b.status === "confirmed").length;
   const pendingCount = pendingBookings.length;
+  const rejectedCount = bookings.filter((b) => b.status === "rejected").length;
+  const activeBookingsCount = bookings.filter((b) => b.status !== "rejected").length;
 
   const { weekdayBookings, weekendBookings } = bookings.filter((b) => b.status !== "rejected").reduce(
     (acc, b) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -53,6 +53,10 @@ const EditBookingDialog = ({ booking, open, onOpenChange, onSaved }: EditBooking
       to: b.date_to ? parseISO(b.date_to) : undefined,
     });
   };
+
+  useEffect(() => {
+    if (booking && open) initFromBooking(booking);
+  }, [booking, open]);
 
   if (!booking) return null;
 

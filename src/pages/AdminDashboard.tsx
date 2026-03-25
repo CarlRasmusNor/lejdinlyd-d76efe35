@@ -100,10 +100,13 @@ const AdminDashboard = () => {
     }
   };
 
+  const pendingBookings = bookings.filter((b) => b.status === "pending");
+  const nonPendingBookings = bookings.filter((b) => b.status !== "pending");
+
   const totalRevenue = bookings.filter((b) => b.status !== "rejected").reduce((sum, b) => sum + b.total_price, 0);
 
   const confirmedCount = bookings.filter((b) => b.status === "confirmed").length;
-  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+  const pendingCount = pendingBookings.length;
 
   const { weekdayBookings, weekendBookings } = bookings.filter((b) => b.status !== "rejected").reduce(
     (acc, b) => {

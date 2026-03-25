@@ -110,9 +110,11 @@ const BookingCalendar = ({ bookings, onScrollToBooking }: BookingCalendarProps) 
                     {info.totalSpeakers} højttaler{info.totalSpeakers !== 1 ? "e" : ""} i alt
                   </p>
                   {info.bookings.map((b) => (
-                    <div
+                    <button
                       key={b.id}
-                      className="flex items-start gap-2 text-xs border-t border-border pt-2"
+                      type="button"
+                      onClick={() => onScrollToBooking?.(b.id)}
+                      className="flex items-start gap-2 text-xs border-t border-border pt-2 w-full text-left hover:bg-secondary/50 rounded-md px-1 py-1.5 transition-colors cursor-pointer"
                     >
                       <span className={cn("w-2 h-2 rounded-full mt-1 shrink-0", statusColors[b.status])} />
                       <div>
@@ -121,7 +123,7 @@ const BookingCalendar = ({ bookings, onScrollToBooking }: BookingCalendarProps) 
                           {b.speaker_count} stk · {b.total_price} DKK · {statusLabels[b.status]}
                         </p>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </PopoverContent>
               </Popover>

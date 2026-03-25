@@ -9,6 +9,7 @@ import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";
 import EditBookingDialog, { type Booking } from "@/components/admin/EditBookingDialog";
 import BookingChart from "@/components/admin/BookingChart";
+import BookingCalendar from "@/components/admin/BookingCalendar";
 
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -147,6 +148,8 @@ const AdminDashboard = () => {
         </div>
 
         <BookingChart bookings={bookings} />
+
+        <BookingCalendar bookings={bookings} />
 
         {loading ? (
           <div className="flex justify-center py-12">

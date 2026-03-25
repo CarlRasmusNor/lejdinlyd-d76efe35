@@ -164,7 +164,14 @@ const AdminDashboard = () => {
           />
         )}
 
-        <BookingCalendar bookings={bookings} />
+        <BookingCalendar bookings={bookings} onScrollToBooking={(id) => {
+          const el = document.getElementById(`booking-row-${id}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            el.classList.add("ring-2", "ring-primary", "ring-offset-2");
+            setTimeout(() => el.classList.remove("ring-2", "ring-primary", "ring-offset-2"), 2000);
+          }
+        }} />
 
         <BookingChart bookings={bookings} />
 
@@ -247,7 +254,7 @@ const BookingsTable = ({
         </thead>
         <tbody>
           {bookings.map((b) => (
-            <tr key={b.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+            <tr key={b.id} id={`booking-row-${b.id}`} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
               <td className="px-4 py-3">
                 <BookingStatusBadge status={b.status} />
               </td>

@@ -12,6 +12,15 @@ const links = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
+  const handleMobileLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setOpen(false);
+    setTimeout(() => {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 350);
+  };
+
   return (
     <motion.nav
       initial={{ y: -80 }}
@@ -71,7 +80,7 @@ const Navbar = () => {
               <motion.a
                 key={l.href}
                 href={l.href}
-                onClick={() => setOpen(false)}
+                onClick={(e) => handleMobileLink(e, l.href)}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05 }}
@@ -82,7 +91,7 @@ const Navbar = () => {
             ))}
             <motion.a
               href="#booking"
-              onClick={() => setOpen(false)}
+              onClick={(e) => handleMobileLink(e, "#booking")}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}

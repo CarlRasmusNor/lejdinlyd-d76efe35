@@ -71,24 +71,20 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
-            <motion.a
+            <a
               href="#booking"
               onClick={(e) => { e.preventDefault(); document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all animate-glow-pulse"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all animate-glow-pulse active:scale-95"
             >
               Book nu
-            </motion.a>
-            <motion.a
+            </a>
+            <a
               href="#priser"
               onClick={(e) => { e.preventDefault(); document.querySelector("#priser")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-lg border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center justify-center px-8 py-4 rounded-lg border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all active:scale-95"
             >
               Se priser
-            </motion.a>
+            </a>
           </motion.div>
         </div>
 

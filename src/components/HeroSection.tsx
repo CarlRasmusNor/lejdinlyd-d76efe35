@@ -73,6 +73,7 @@ const HeroSection = () => {
           >
             <motion.a
               href="#booking"
+              onClick={(e) => { e.preventDefault(); document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" }); }}
               className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all animate-glow-pulse"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
@@ -81,6 +82,7 @@ const HeroSection = () => {
             </motion.a>
             <motion.a
               href="#priser"
+              onClick={(e) => { e.preventDefault(); document.querySelector("#priser")?.scrollIntoView({ behavior: "smooth" }); }}
               className="inline-flex items-center justify-center px-8 py-4 rounded-lg border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}

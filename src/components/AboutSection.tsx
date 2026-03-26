@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { Zap, BadgeDollarSign, Volume2, MessageCircle } from "lucide-react";
 
 const features = [
-  { icon: Zap, title: "Nem udlejning", desc: "Book hurtigt og nemt – vi klarer resten." },
-  { icon: BadgeDollarSign, title: "Billige priser", desc: "Kvalitetslyd uden at sprænge budgettet." },
-  { icon: Volume2, title: "Fantastisk lyd", desc: "Soundboks Go leverer kraftig, klar lyd til enhver lejlighed." },
-  { icon: MessageCircle, title: "Hurtig kontakt", desc: "Vi svarer hurtigt og booker dig ind på ingen tid." },
+  { icon: Zap, title: "Nem udlejning", desc: "Book hurtigt og nemt – vi klarer resten.", href: "#booking" },
+  { icon: BadgeDollarSign, title: "Billige priser", desc: "Kvalitetslyd uden at sprænge budgettet.", href: "#priser" },
+  { icon: Volume2, title: "Fantastisk lyd", desc: "Soundboks Go leverer kraftig, klar lyd til enhver lejlighed.", href: "#kvalitet" },
+  { icon: MessageCircle, title: "Hurtig kontakt", desc: "Vi svarer hurtigt og booker dig ind på ingen tid.", href: "#kontakt" },
 ];
 
 const AboutSection = () => {

@@ -28,6 +28,7 @@ const ProductShowcase = () => {
 
   return (
     <section
+      id="kvalitet"
       ref={sectionRef}
       className="relative py-32 md:py-44 px-6 overflow-hidden bg-secondary/30"
     >

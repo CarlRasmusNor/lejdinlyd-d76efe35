@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { Zap, BadgeDollarSign, Volume2, MessageCircle } from "lucide-react";
 
 const features = [
-  { icon: Zap, title: "Nem udlejning", desc: "Book hurtigt og nemt – vi klarer resten." },
-  { icon: BadgeDollarSign, title: "Billige priser", desc: "Kvalitetslyd uden at sprænge budgettet." },
-  { icon: Volume2, title: "Fantastisk lyd", desc: "Soundboks Go leverer kraftig, klar lyd til enhver lejlighed." },
-  { icon: MessageCircle, title: "Hurtig kontakt", desc: "Vi svarer hurtigt og booker dig ind på ingen tid." },
+  { icon: Zap, title: "Nem udlejning", desc: "Book hurtigt og nemt – vi klarer resten.", href: "#booking" },
+  { icon: BadgeDollarSign, title: "Billige priser", desc: "Kvalitetslyd uden at sprænge budgettet.", href: "#priser" },
+  { icon: Volume2, title: "Fantastisk lyd", desc: "Soundboks Go leverer kraftig, klar lyd til enhver lejlighed.", href: "#kvalitet" },
+  { icon: MessageCircle, title: "Hurtig kontakt", desc: "Vi svarer hurtigt og booker dig ind på ingen tid.", href: "#kontakt" },
 ];
 
 const AboutSection = () => {
@@ -102,7 +102,8 @@ const AboutSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
               whileHover={{ y: -6, transition: { duration: 0.25 } }}
-              className="rounded-2xl border border-border bg-card p-6 text-center group cursor-default hover:border-primary/30 transition-colors"
+              className="rounded-2xl border border-border bg-card p-6 text-center group cursor-pointer hover:border-primary/30 transition-colors"
+              onClick={() => document.querySelector(f.href)?.scrollIntoView({ behavior: "smooth" })}
             >
               <motion.div
                 className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4"
@@ -112,7 +113,10 @@ const AboutSection = () => {
                 <f.icon className="w-6 h-6 text-primary" />
               </motion.div>
               <h3 className="font-heading font-semibold text-lg mb-2">{f.title}</h3>
-              <p className="text-muted-foreground text-sm">{f.desc}</p>
+              <p className="text-muted-foreground text-sm mb-4">{f.desc}</p>
+              <span className="inline-flex items-center text-primary text-sm font-medium group-hover:underline">
+                Gå til →
+              </span>
             </motion.div>
           ))}
         </div>

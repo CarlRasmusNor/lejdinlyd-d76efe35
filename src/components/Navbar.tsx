@@ -12,6 +12,15 @@ const links = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
+  const handleMobileLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setOpen(false);
+    setTimeout(() => {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 350);
+  };
+
   return (
     <motion.nav
       initial={{ y: -80 }}

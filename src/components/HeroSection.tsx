@@ -45,7 +45,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6 }}
             className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-6"
           >
-            LejDinLyd
+            Soundboks udlejning i Aalborg
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
@@ -53,9 +53,9 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-2xl mb-6"
           >
-            <span className="whitespace-nowrap">Lej en Soundboks Go</span>
+            Lej en Soundboks Go
             <br />
-            <span className="text-primary whitespace-nowrap">nemt og hurtigt</span>
+            <span className="text-primary">i Aalborg &amp; omegn</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -63,7 +63,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="text-muted-foreground text-lg md:text-xl max-w-xl mb-10 lg:mx-0 mx-auto"
           >
-            Perfekt til fest, forsamling og events
+            Billig højtaler udlejning fra 150 kr/dag – perfekt til fest, events og forsamlinger i Aalborg
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

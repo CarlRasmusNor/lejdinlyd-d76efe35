@@ -7,10 +7,11 @@ import {
 } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "Hvordan booker jeg?", a: "Du kan booke ved at udfylde formularen her på siden, eller kontakte os direkte via telefon eller email. Vi bekræfter din booking hurtigst muligt." },
-  { q: "Hvordan foregår afhentning og levering?", a: "Afhentning sker på Kjellerupsgade 4, 9000 Aalborg. Vi tilbyder også levering inden for Aalborg – kontakt os for at aftale nærmere." },
-  { q: "Hvad koster det?", a: "Søndag til torsdag koster det 150 DKK per dag. Fredag og lørdag koster det 300 DKK per dag. Ingen skjulte gebyrer." },
-  { q: "Er højttaleren nem at bruge?", a: "Ja! Soundboks Go er super nem at bruge. Du tænder den, forbinder via Bluetooth, og så kører musikken. Vi giver dig en kort intro ved afhentning." },
+  { q: "Hvordan lejer jeg en Soundboks i Aalborg?", a: "Du booker nemt via formularen her på siden eller kontakter os på telefon/email. Vi bekræfter din booking hurtigst muligt, og du kan hente højttaleren på Kjellerupsgade 4 i Aalborg." },
+  { q: "Leverer I Soundboks i hele Aalborg?", a: "Ja, vi tilbyder levering inden for Aalborg og nærområdet. Bor du uden for Aalborg-området, kan du afhente højttaleren på vores adresse: Kjellerupsgade 4, 9000 Aalborg." },
+  { q: "Hvad koster det at leje en Soundboks Go i Aalborg?", a: "Søndag til torsdag koster det kun 150 kr per dag. Fredag og lørdag koster det 300 kr per dag. Ingen depositum eller skjulte gebyrer – du betaler kun for de dage du lejer." },
+  { q: "Kan jeg leje en højtaler til fest i Aalborg?", a: "Absolut! Soundboks Go er perfekt til fester, havefester, konfirmationer, bryllupper og events i Aalborg og omegn. Den spiller højt, har lang batteritid og forbindes nemt via Bluetooth." },
+  { q: "Hvornår kan jeg afhente og aflevere højttaleren?", a: "Afhentning og aflevering sker efter aftale på Kjellerupsgade 4, 9000 Aalborg. Vi er fleksible og finder altid et tidspunkt der passer dig." },
 ];
 
 const FAQSection = () => {

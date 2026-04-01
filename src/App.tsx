@@ -8,6 +8,8 @@ import LejSoundboksAalborg from "./pages/LejSoundboksAalborg.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 
 const queryClient = new QueryClient();
 

@@ -98,6 +98,15 @@ const Navbar = () => {
                 {l.label}
               </motion.a>
             ))}
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: links.length * 0.05 }}>
+              <Link
+                to="/blog"
+                onClick={() => setOpen(false)}
+                className="block text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                Blog
+              </Link>
+            </motion.div>
             <motion.a
               href="#booking"
               onClick={(e) => handleMobileLink(e, "#booking")}

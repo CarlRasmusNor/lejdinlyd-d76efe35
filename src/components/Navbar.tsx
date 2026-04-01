@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const links = [
   { href: "#priser", label: "Priser" },
@@ -47,6 +48,14 @@ const Navbar = () => {
               {l.label}
             </motion.a>
           ))}
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + links.length * 0.08 }}>
+            <Link
+              to="/blog"
+              className="text-sm text-foreground hover:text-primary transition-colors font-medium relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left"
+            >
+              Blog
+            </Link>
+          </motion.div>
           <motion.a
             href="#booking"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -89,6 +98,15 @@ const Navbar = () => {
                 {l.label}
               </motion.a>
             ))}
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: links.length * 0.05 }}>
+              <Link
+                to="/blog"
+                onClick={() => setOpen(false)}
+                className="block text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                Blog
+              </Link>
+            </motion.div>
             <motion.a
               href="#booking"
               onClick={(e) => handleMobileLink(e, "#booking")}

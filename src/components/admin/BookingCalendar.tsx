@@ -64,7 +64,7 @@ const BookingCalendar = ({ bookings, onScrollToBooking }: BookingCalendarProps) 
 
   // Sorted upcoming bookings for the sidebar
   const sortedBookings = useMemo(() => {
-    return [...bookings].sort((a, b) => a.date_from.localeCompare(b.date_from));
+    return [...bookings].sort((a, b) => b.date_from.localeCompare(a.date_from));
   }, [bookings]);
 
   // Bookings for the selected date

@@ -5,6 +5,9 @@ import soundboksAngle from "@/assets/soundboks-angle.png";
 import soundboksSide from "@/assets/soundboks-side.png";
 import { Volume2, Battery, Bluetooth } from "lucide-react";
 
+const scrollTo = (id: string) =>
+  document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+
 const features = [
   { icon: Volume2, label: "Massiv lyd", desc: "Op til 121 dB" },
   { icon: Battery, label: "Lang batteritid", desc: "Op til 40 timer" },
@@ -89,7 +92,7 @@ const ProductShowcase = () => {
           {images.map((img, i) => {
             const isCenter = i === 1;
             return (
-              <a href="#priser" key={i}>
+              <a href="#priser" key={i} onClick={(e) => { e.preventDefault(); scrollTo("#priser"); }}>
                 <motion.div
                   initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -139,6 +142,7 @@ const ProductShowcase = () => {
         >
           <motion.a
             href="#priser"
+            onClick={(e) => { e.preventDefault(); scrollTo("#priser"); }}
             className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}

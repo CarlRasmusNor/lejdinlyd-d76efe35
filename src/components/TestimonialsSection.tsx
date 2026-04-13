@@ -3,25 +3,25 @@ import { Star } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Mads T.",
+    name: "Christian M.",
     location: "Aalborg",
     text: "Brugte LejDinLyd til min havefest – super nem booking og højttaleren lød fantastisk. Levering direkte til døren. Kan klart anbefales!",
     occasion: "Havefest",
   },
   {
-    name: "Sofie K.",
+    name: "Mathias R.",
     location: "Aalborg Øst",
     text: "Lej en Soundboks Go til vores konfirmation. Prisen var helt i orden, og det var nemt at aftale afhentning. Gæsterne var vilde med lyden.",
     occasion: "Konfirmation",
   },
   {
-    name: "Jonas R.",
+    name: "Mads K.",
     location: "Nørresundby",
     text: "Har lejet to gange nu. Hurtig respons, fair priser og ingen bøvl. Præcis den service man har brug for til en fest.",
     occasion: "Fødselsdagsfest",
   },
   {
-    name: "Camilla M.",
+    name: "Emilie V.",
     location: "Aalborg",
     text: "Rigtig god oplevelse fra start til slut. Betalte ved overlevering, ingen deposita – tillidsbaseret og professionelt.",
     occasion: "Sommerfest",

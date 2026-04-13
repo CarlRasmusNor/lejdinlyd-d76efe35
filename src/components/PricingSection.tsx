@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CalendarDays, PartyPopper, Music } from "lucide-react";
+import { CalendarDays, PartyPopper, Music, ShieldCheck, Banknote, Clock } from "lucide-react";
 
 const plans = [
   { icon: CalendarDays, label: "Søndag – Torsdag", price: "150", href: "#booking" },
@@ -78,12 +78,35 @@ const PricingSection = () => {
           ))}
         </div>
 
+        {/* Trust badges */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="mt-8 flex flex-wrap justify-center gap-4"
+        >
+          {[
+            { icon: ShieldCheck, text: "Intet depositum" },
+            { icon: Banknote, text: "Betal ved overlevering" },
+            { icon: Clock, text: "Fleksibel afhentning" },
+          ].map((badge) => (
+            <div
+              key={badge.text}
+              className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-5 py-2"
+            >
+              <badge.icon className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">{badge.text}</span>
+            </div>
+          ))}
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-10 text-center"
+          className="mt-8 text-center"
         >
           <motion.a
             href="#booking"

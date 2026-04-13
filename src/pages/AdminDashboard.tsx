@@ -81,9 +81,10 @@ const AdminDashboard = () => {
         body: {
           templateName: "booking-confirmation",
           recipientEmail: booking.email,
-          idempotencyKey: `booking-confirm-${booking.id}`,
           templateData: {
             name: booking.name,
+            email: booking.email,
+            phone: booking.phone,
             dateFrom: booking.date_from,
             dateTo: booking.date_to,
             speakerCount: booking.speaker_count,
@@ -94,7 +95,28 @@ const AdminDashboard = () => {
       if (error) throw error;
       toast.success(`Bekræftelses-email sendt til ${booking.email}`);
     } catch {
-      toast.error("Email-infrastruktur er ikke sat op endnu. Kontakt support.");
+      toast.error("Kunne ikke sende email – er Resend API-nøglen sat op?");
+    } finally {
+      setSendingEmail(null);
+    }
+  };
+
+  const handleSendReview = async (booking: Booking) => {
+    setSendingEmail(`review-${booking.id}`);
+    try {
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "review-request",
+          recipientEmail: booking.email,
+          templateData: {
+            name: booking.name,
+          },
+        },
+      });
+      if (error) throw error;
+      toast.success(`Anmeldelsesanmodning sendt til ${booking.email}`);
+    } catch {
+      toast.error("Kunne ikke sende email – er Resend API-nøglen sat op?");
     } finally {
       setSendingEmail(null);
     }
@@ -163,6 +185,7 @@ const AdminDashboard = () => {
             onDelete={handleDelete}
             onEdit={(booking) => { setEditBooking(booking); setEditOpen(true); }}
             onSendEmail={handleSendEmail}
+            onSendReview={handleSendReview}
             sendingEmail={sendingEmail}
           />
         )}
@@ -193,6 +216,7 @@ const AdminDashboard = () => {
             onDelete={handleDelete}
             onEdit={(booking) => { setEditBooking(booking); setEditOpen(true); }}
             onSendEmail={handleSendEmail}
+            onSendReview={handleSendReview}
             sendingEmail={sendingEmail}
           />
         ) : null}
@@ -228,6 +252,7 @@ const BookingsTable = ({
   onDelete,
   onEdit,
   onSendEmail,
+  onSendReview,
   sendingEmail,
 }: {
   title: string;
@@ -237,6 +262,7 @@ const BookingsTable = ({
   onDelete: (id: string) => void;
   onEdit: (booking: Booking) => void;
   onSendEmail: (booking: Booking) => void;
+  onSendReview: (booking: Booking) => void;
   sendingEmail: string | null;
 }) => (
   <div className="space-y-2">
@@ -278,6 +304,7 @@ const BookingsTable = ({
                   onDelete={onDelete}
                   onEdit={onEdit}
                   onSendEmail={onSendEmail}
+                  onSendReview={onSendReview}
                   sendingEmail={sendingEmail}
                 />
               </td>

@@ -105,6 +105,28 @@ const BookingSection = () => {
       if (error) throw error;
       setSubmitted(true);
       toast.success("Booking modtaget!");
+
+      // Send emails i baggrunden – blokerer ikke UI
+      const emailPayload = {
+        name: result.data.name,
+        email: result.data.email,
+        phone: result.data.phone,
+        message: result.data.message || null,
+        dateFrom: format(dateRange.from, "yyyy-MM-dd"),
+        dateTo: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
+        speakerCount,
+        totalPrice: priceBreakdown.total,
+      };
+
+      // Bekræftelse til kunden
+      supabase.functions.invoke("send-transactional-email", {
+        body: { templateName: "booking-confirmation", recipientEmail: result.data.email, templateData: emailPayload },
+      }).catch(console.error);
+
+      // Notifikation til ejer
+      supabase.functions.invoke("send-transactional-email", {
+        body: { templateName: "new-booking-admin", templateData: emailPayload },
+      }).catch(console.error);
     } catch (err) {
       console.error(err);
       const msg = err instanceof Error ? err.message : "";

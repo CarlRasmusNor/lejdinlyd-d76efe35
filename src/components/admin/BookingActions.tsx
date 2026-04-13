@@ -1,4 +1,4 @@
-import { Check, X, Trash2, Pencil, Mail, Loader2 } from "lucide-react";
+import { Check, X, Trash2, Pencil, Mail, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -28,6 +28,7 @@ interface BookingActionsProps {
   onDelete: (id: string) => void;
   onEdit: (booking: Booking) => void;
   onSendEmail: (booking: Booking) => void;
+  onSendReview: (booking: Booking) => void;
   sendingEmail: string | null;
 }
 
@@ -38,6 +39,7 @@ const BookingActions = ({
   onDelete,
   onEdit,
   onSendEmail,
+  onSendReview,
   sendingEmail,
 }: BookingActionsProps) => {
   return (
@@ -86,6 +88,17 @@ const BookingActions = ({
               <Mail className="w-4 h-4 mr-2" />
             )}
             Send bekræftelses-email
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onSendReview(booking)}
+            disabled={sendingEmail === `review-${booking.id}`}
+          >
+            {sendingEmail === `review-${booking.id}` ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Star className="w-4 h-4 mr-2" />
+            )}
+            Send anmeldelsesanmodning
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <AlertDialog>

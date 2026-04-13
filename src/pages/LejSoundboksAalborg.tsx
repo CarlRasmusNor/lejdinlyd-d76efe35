@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Truck, Volume2, Bluetooth, Battery, PartyPopper, Calendar, BadgeDollarSign } from "lucide-react";
+import { MapPin, Truck, Volume2, Bluetooth, Battery, PartyPopper, Calendar, BadgeDollarSign, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BookingSection from "@/components/BookingSection";
@@ -58,8 +59,26 @@ const LejSoundboksAalborg = () => {
     <>
       <Navbar />
 
+      {/* Breadcrumb */}
+      <div className="pt-20 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" /> Tilbage til forsiden
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6 bg-gradient-to-b from-background to-secondary/20">
+      <section className="pt-8 pb-20 px-6 bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Truck, Volume2, Bluetooth, Battery, PartyPopper, Calendar, BadgeDollarSign } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -42,6 +43,17 @@ const features = [
 ];
 
 const LejSoundboksAalborg = () => {
+  useEffect(() => {
+    document.title = "Lej Soundboks i Aalborg – Nem udlejning fra 150 kr/dag | LejDinLyd";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", "Lej en Soundboks Go i Aalborg fra kun 150 kr/dag. Nem online booking, ingen depositum og levering i hele Aalborg og omegn. Perfekt til fest, konfirmation og bryllup.");
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute("href", "https://lej-din-lyd.dk/lej-soundboks-aalborg");
+    return () => {
+      if (canonical) canonical.setAttribute("href", "https://lej-din-lyd.dk");
+    };
+  }, []);
+
   return (
     <>
       <Navbar />

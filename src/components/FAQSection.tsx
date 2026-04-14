@@ -7,56 +7,45 @@ import {
 } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "Hvordan lejer jeg en Soundboks i Aalborg?", a: "Du booker nemt via formularen her på siden eller kontakter os på telefon/email. Vi bekræfter din booking hurtigst muligt, og du kan hente højttaleren på Kjellerupsgade 4 i Aalborg." },
-  { q: "Leverer I Soundboks i hele Aalborg?", a: "Ja, vi tilbyder levering inden for Aalborg og nærområdet. Bor du uden for Aalborg-området, kan du afhente højttaleren på vores adresse: Kjellerupsgade 4, 9000 Aalborg." },
-  { q: "Hvad koster det at leje en Soundboks Go i Aalborg?", a: "Søndag til torsdag koster det kun 150 kr per dag. Fredag og lørdag koster det 300 kr per dag. Ingen depositum eller skjulte gebyrer – du betaler kun for de dage du lejer." },
-  { q: "Kan jeg leje en højtaler til fest i Aalborg?", a: "Absolut! Soundboks Go er perfekt til fester, havefester, konfirmationer, bryllupper og events i Aalborg og omegn. Den spiller højt, har lang batteritid og forbindes nemt via Bluetooth." },
-  { q: "Hvornår kan jeg afhente og aflevere højttaleren?", a: "Afhentning og aflevering sker efter aftale på Kjellerupsgade 4, 9000 Aalborg. Vi er fleksible og finder altid et tidspunkt der passer dig." },
+  { q: "Hvordan lejer jeg en Soundboks i Aalborg?", a: "Du booker via formularen her på siden eller kontakter os direkte. Vi bekræfter din booking hurtigst muligt og aftaler derefter levering eller afhentning." },
+  { q: "Leverer I Soundboks i hele Aalborg?", a: "Ja, vi tilbyder levering i Aalborg og nærområdet. Bor du uden for området, kan du afhente højttaleren på Kjellerupsgade 4, 9000 Aalborg." },
+  { q: "Hvad koster det at leje en Soundboks Go i Aalborg?", a: "Søndag til torsdag koster det 150 kr per dag. Fredag og lørdag koster det 300 kr per dag. Ingen depositum og ingen skjulte gebyrer." },
+  { q: "Kan jeg leje en højtaler til fest i Aalborg?", a: "Ja. Soundboks Go passer godt til havefester, konfirmationer, fødselsdage, sommerarrangementer og mindre events i Aalborg og omegn." },
+  { q: "Hvornår kan jeg afhente og aflevere højttaleren?", a: "Afhentning og aflevering sker efter aftale. Vi er fleksible og finder et tidspunkt der passer til dit arrangement." },
 ];
 
 const FAQSection = () => {
   return (
-    <section id="faq" className="py-24 px-6 bg-secondary/30 overflow-hidden">
-      <div className="container mx-auto max-w-2xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Ofte stillede <span className="text-primary">spørgsmål</span>
+    <section id="faq" className="px-6 py-24 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 max-w-2xl">
+          <span className="eyebrow">Ofte stillede spørgsmål</span>
+          <h2 className="mt-5 text-4xl font-bold text-foreground md:text-5xl">
+            Alt det praktiske samlet ét sted.
           </h2>
-        </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.45 }}
+          className="section-shell rounded-[2.2rem] p-4 md:p-6"
         >
           <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
+            {faqs.map((faq, index) => (
+              <AccordionItem
+                key={faq.q}
+                value={`item-${index}`}
+                className="rounded-[1.5rem] border border-white/8 bg-background/45 px-5"
               >
-                <AccordionItem
-                  value={`item-${i}`}
-                  className="rounded-xl border border-border bg-card px-6 hover:border-primary/20 transition-colors"
-                >
-                  <AccordionTrigger className="font-heading font-semibold text-left hover:no-underline">
-                    {faq.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">
-                    {faq.a}
-                  </AccordionContent>
-                </AccordionItem>
-              </motion.div>
+                <AccordionTrigger className="font-heading text-left text-lg font-semibold text-foreground hover:no-underline">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-7 text-muted-foreground">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
             ))}
           </Accordion>
         </motion.div>

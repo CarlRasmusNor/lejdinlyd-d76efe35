@@ -5,82 +5,87 @@ const testimonials = [
   {
     name: "Christian M.",
     location: "Aalborg",
-    text: "Brugte LejDinLyd til min havefest – super nem booking og højttaleren lød fantastisk. Levering direkte til døren. Kan klart anbefales!",
+    text: "Brugte LejDinLyd til min havefest. Super nem booking, hurtig levering og højttaleren lød præcis så stort som vi håbede.",
     occasion: "Havefest",
   },
   {
     name: "Mathias R.",
     location: "Aalborg Øst",
-    text: "Lej en Soundboks Go til vores konfirmation. Prisen var helt i orden, og det var nemt at aftale afhentning. Gæsterne var vilde med lyden.",
+    text: "Prisen var helt i orden, og det var nemt at aftale afhentning. Det føltes mere som en lokal, god service end som en tung udlejning.",
     occasion: "Konfirmation",
   },
   {
     name: "Mads K.",
     location: "Nørresundby",
-    text: "Har lejet to gange nu. Hurtig respons, fair priser og ingen bøvl. Præcis den service man har brug for til en fest.",
+    text: "Har lejet to gange nu. Hurtig respons, fair priser og ingen bøvl. Præcis den type udlejning man håber på.",
     occasion: "Fødselsdagsfest",
-  },
-  {
-    name: "Emilie V.",
-    location: "Aalborg",
-    text: "Rigtig god oplevelse fra start til slut. Betalte ved overlevering, ingen deposita – tillidsbaseret og professionelt.",
-    occasion: "Sommerfest",
   },
 ];
 
 const Stars = () => (
-  <div className="flex gap-0.5 mb-3">
-    {[...Array(5)].map((_, i) => (
-      <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+  <div className="flex gap-1">
+    {[...Array(5)].map((_, index) => (
+      <Star key={index} className="h-4 w-4 fill-primary text-primary" />
     ))}
   </div>
 );
 
 const TestimonialsSection = () => {
   return (
-    <section id="anmeldelser" className="py-24 px-6 overflow-hidden">
-      <div className="container mx-auto max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <p className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-4">
-            Hvad kunderne siger
+    <section id="anmeldelser" className="px-6 py-24 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <span className="eyebrow">Rigtige oplevelser</span>
+            <h2 className="mt-5 text-4xl font-bold text-foreground md:text-6xl">
+              Tilfredse kunder i Aalborg
+            </h2>
+          </div>
+          <p className="max-w-xl text-base leading-8 text-muted-foreground">
+            LejDinLyd skal ikke bare se godt ud online. Det skal være let, hurtigt og pålideligt i praksis. Det er
+            den oplevelse kunderne beskriver igen og igen.
           </p>
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Tilfredse kunder i <span className="text-primary">Aalborg</span>
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            Hundredvis af fester i Aalborg og omegn – her er hvad nogle af vores kunder siger.
-          </p>
-        </motion.div>
+        </div>
 
-        <div className="grid sm:grid-cols-2 gap-6">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="rounded-2xl border border-border bg-card p-7 flex flex-col gap-3 hover:border-primary/20 transition-colors"
-            >
-              <Stars />
-              <p className="text-foreground leading-relaxed">"{t.text}"</p>
-              <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
-                <div>
-                  <p className="font-heading font-semibold text-sm text-foreground">{t.name}</p>
-                  <p className="text-muted-foreground text-xs">{t.location}</p>
-                </div>
-                <span className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                  {t.occasion}
-                </span>
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="section-shell rounded-[2.2rem] p-7 md:p-9">
+            <Stars />
+            <p className="mt-6 font-heading text-3xl font-semibold leading-tight text-foreground md:text-4xl">
+              "{testimonials[0].text}"
+            </p>
+            <div className="mt-10 flex items-center justify-between border-t border-white/8 pt-5">
+              <div>
+                <p className="font-semibold text-foreground">{testimonials[0].name}</p>
+                <p className="text-sm text-muted-foreground">{testimonials[0].location}</p>
               </div>
-            </motion.div>
-          ))}
+              <span className="rounded-full bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                {testimonials[0].occasion}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid gap-6">
+            {testimonials.slice(1).map((testimonial, index) => (
+              <motion.div
+                key={testimonial.name}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: index * 0.08 }}
+                className="section-shell rounded-[2rem] p-6"
+              >
+                <Stars />
+                <p className="mt-5 text-base leading-8 text-foreground">"{testimonial.text}"</p>
+                <div className="mt-6 flex items-center justify-between border-t border-white/8 pt-4">
+                  <div>
+                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.location}</p>
+                  </div>
+                  <span className="text-xs uppercase tracking-[0.22em] text-primary">{testimonial.occasion}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

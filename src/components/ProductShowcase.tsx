@@ -1,158 +1,113 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import soundboksFront from "@/assets/soundboks-front.png";
+import { motion } from "framer-motion";
+import { Battery, Bluetooth, Volume2 } from "lucide-react";
 import soundboksAngle from "@/assets/soundboks-angle.png";
+import soundboksFront from "@/assets/soundboks-front.png";
 import soundboksSide from "@/assets/soundboks-side.png";
-import { Volume2, Battery, Bluetooth } from "lucide-react";
 
-const scrollTo = (id: string) =>
-  document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
 const features = [
-  { icon: Volume2, label: "Massiv lyd", desc: "Op til 121 dB" },
-  { icon: Battery, label: "Lang batteritid", desc: "Op til 40 timer" },
-  { icon: Bluetooth, label: "Trådløs", desc: "Bluetooth 5.0" },
-];
-
-const images = [
-  { src: soundboksSide, alt: "Soundboks Go side" },
-  { src: soundboksFront, alt: "Soundboks Go forfra" },
-  { src: soundboksAngle, alt: "Soundboks Go vinkel" },
+  { icon: Volume2, title: "Klar festlyd", text: "Op til 121 dB med en størrelse der stadig er let at håndtere." },
+  { icon: Battery, title: "Lang batteritid", text: "Perfekt til hele dagen, hele aftenen og dagen derpå." },
+  { icon: Bluetooth, title: "Trådløs frihed", text: "Forbind nemt via Bluetooth og slip for bøvl med kabler." },
 ];
 
 const ProductShowcase = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-
   return (
-    <section
-      id="kvalitet"
-      ref={sectionRef}
-      className="relative py-32 md:py-44 px-6 overflow-hidden bg-secondary/30"
-    >
-      {/* Ambient background glow */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ y: bgY }}
-      >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/8 blur-[150px]" />
-      </motion.div>
-
-      <div className="container mx-auto max-w-6xl relative z-10">
-        {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-6"
-        >
-          <p className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-4">
-            Oplev kvaliteten
-          </p>
-          <h2 className="font-heading text-4xl md:text-6xl font-bold mb-4">
-            Soundboks <span className="text-primary">Go</span>
+    <section id="kvalitet" className="px-6 py-24 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 max-w-2xl">
+          <span className="eyebrow">Soundboks Go</span>
+          <h2 className="mt-5 text-4xl font-bold text-foreground md:text-6xl">
+            Produktet skal føles lige så stærkt som lyden.
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-md mx-auto">
-            Kompakt, kraftig og klar til fest
+          <p className="mt-4 text-lg leading-8 text-muted-foreground">
+            Derfor viser vi ikke bare højtaleren frem. Vi viser, hvorfor den er den rigtige størrelse, styrke og
+            fleksibilitet til fester i Aalborg og omegn.
           </p>
-        </motion.div>
-
-        {/* Feature pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-4 mb-16"
-        >
-          {features.map((f, i) => (
-            <motion.div
-              key={f.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
-              className="flex items-center gap-2.5 rounded-full border border-border bg-card px-5 py-2.5"
-            >
-              <f.icon className="w-4 h-4 text-primary" />
-              <span className="text-foreground text-sm font-medium">{f.label}</span>
-              <span className="text-muted-foreground text-xs">· {f.desc}</span>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Product images – large center, smaller sides */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
-          {images.map((img, i) => {
-            const isCenter = i === 1;
-            return (
-              <a href="#priser" key={i} onClick={(e) => { e.preventDefault(); scrollTo("#priser"); }}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.7,
-                    delay: isCenter ? 0.1 : 0.25 + i * 0.1,
-                    ease: "easeOut",
-                  }}
-                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                  className={`flex items-center justify-center rounded-2xl border border-border bg-card group cursor-pointer hover:border-primary/30 transition-colors ${
-                    isCenter ? "p-10 sm:-my-4 sm:scale-105 z-10" : "p-8"
-                  }`}
-                >
-                  <motion.img
-                    src={img.src}
-                    alt={img.alt}
-                    loading="lazy"
-                    className={`w-auto object-contain ${
-                      isCenter ? "max-h-80" : "max-h-56"
-                    }`}
-                    animate={{
-                      y: [0, -12, 5, -8, 0],
-                      rotate: [0, 2, -3, 1.5, 0],
-                      scale: [1, 1.03, 0.98, 1.02, 1],
-                    }}
-                    transition={{
-                      duration: 5 + i * 0.8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: i * 0.6,
-                    }}
-                  />
-                </motion.div>
-              </a>
-            );
-          })}
         </div>
 
-        {/* Scroll-down arrow into pricing */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8 }}
-          className="flex justify-center mt-16"
-        >
-          <motion.a
-            href="#priser"
-            onClick={(e) => { e.preventDefault(); scrollTo("#priser"); }}
-            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr_0.7fr]">
+          <div className="section-shell flex flex-col justify-between gap-6 p-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-primary">Udvalgte detaljer</p>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                En kompakt speaker med den slags output, der gør en gårdfest, havefest eller fredagsbar meget lettere
+                at få til at føles rigtig.
+              </p>
+            </div>
+            <div className="space-y-4">
+              {features.map((feature) => (
+                <div key={feature.title} className="rounded-[1.5rem] border border-white/8 bg-background/45 p-4">
+                  <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/12">
+                    <feature.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-heading text-xl font-semibold text-foreground">{feature.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-muted-foreground">{feature.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <motion.div
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.25 }}
+            className="section-shell relative overflow-hidden rounded-[2.2rem] p-6 md:p-8"
           >
-            <span className="text-sm font-heading tracking-wide">Se priser</span>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="stroke-current">
-              <path d="M5 8L10 13L15 8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.a>
-        </motion.div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(24_95%_56%_/_0.16),transparent_32%)]" />
+            <div className="relative flex h-full flex-col justify-between gap-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-primary">Hero product shot</p>
+                  <p className="mt-3 max-w-sm text-sm leading-7 text-muted-foreground">
+                    Kompakt uden at føles lille. Høj nok til arrangementet, enkel nok til at hente, levere og bruge uden
+                    ekstra forklaring.
+                  </p>
+                </div>
+                <a
+                  href="#priser"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo("#priser");
+                  }}
+                  className="rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/15"
+                >
+                  Se priser
+                </a>
+              </div>
+              <div className="relative flex min-h-[24rem] items-center justify-center">
+                <div className="absolute h-72 w-72 rounded-full bg-primary/18 blur-[140px]" />
+                <img
+                  src={soundboksFront}
+                  alt="Soundboks Go forfra"
+                  className="relative z-10 max-h-[24rem] w-auto drop-shadow-[0_24px_100px_hsl(24_95%_56%_/_0.25)]"
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-[1.4rem] border border-white/8 bg-background/45 p-4">
+                  <p className="text-xs uppercase tracking-[0.26em] text-muted-foreground">Brug den til</p>
+                  <p className="mt-2 text-base font-semibold text-foreground">Fester, konfirmationer, events og fredage der skal have lidt mere volume.</p>
+                </div>
+                <div className="rounded-[1.4rem] border border-white/8 bg-background/45 p-4">
+                  <p className="text-xs uppercase tracking-[0.26em] text-muted-foreground">Bookingen</p>
+                  <p className="mt-2 text-base font-semibold text-foreground">Direkte her på siden og med svar hurtigt bagefter.</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid gap-6">
+            {[soundboksSide, soundboksAngle].map((image, index) => (
+              <div key={image} className="section-shell flex min-h-[15rem] items-center justify-center p-5">
+                <img
+                  src={image}
+                  alt={index === 0 ? "Soundboks Go side" : "Soundboks Go vinkel"}
+                  className="max-h-56 w-auto object-contain"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

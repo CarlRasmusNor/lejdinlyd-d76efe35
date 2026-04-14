@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navLinks = [
   { href: "#priser", label: "Priser" },
-  { href: "#om-os", label: "Om os" },
+  { href: "#om-os", label: "Historie" },
   { href: "#levering", label: "Levering" },
   { href: "#booking", label: "Book nu" },
   { href: "#faq", label: "FAQ" },
@@ -19,12 +19,13 @@ const Footer = () => {
     e.preventDefault();
     if (isHome) {
       document.querySelector(anchor)?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      navigate("/");
-      setTimeout(() => {
-        document.querySelector(anchor)?.scrollIntoView({ behavior: "smooth" });
-      }, 400);
+      return;
     }
+
+    navigate("/");
+    setTimeout(() => {
+      document.querySelector(anchor)?.scrollIntoView({ behavior: "smooth" });
+    }, 400);
   };
 
   return (
@@ -32,79 +33,76 @@ const Footer = () => {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className="border-t border-border py-12 px-6"
+      transition={{ duration: 0.45 }}
+      className="px-6 pb-12 pt-10"
     >
-      <div className="container mx-auto max-w-5xl">
-        <div className="grid sm:grid-cols-3 gap-8 mb-10">
-          {/* Brand */}
-          <div>
-            <Link to="/" className="font-heading font-bold text-lg text-primary mb-2 inline-block hover:opacity-80 transition-opacity">
-              LejDinLyd
-            </Link>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Billig og nem udlejning af Soundboks Go i Aalborg og omegn. Fra 150 kr/dag.
-            </p>
-          </div>
+      <div className="mx-auto max-w-6xl">
+        <div className="section-shell rounded-[2.4rem] p-7 md:p-10">
+          <div className="grid gap-8 md:grid-cols-[1.15fr_0.85fr_0.85fr]">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-primary">LejDinLyd</p>
+              <h2 className="mt-4 font-heading text-3xl font-bold text-foreground">
+                Lokal Soundboks udlejning til fester i Aalborg.
+              </h2>
+              <p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground">
+                Billig og enkel udlejning af Soundboks Go i Aalborg og omegn. Hurtig booking, fleksibel afhentning og
+                levering når det giver mening.
+              </p>
+            </div>
 
-          {/* Navigation */}
-          <div>
-            <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-3">Navigation</p>
-            <ul className="space-y-2">
-              {navLinks.map((l) => (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    onClick={(e) => handleAnchorClick(e, l.href)}
-                    className="text-muted-foreground hover:text-primary text-sm transition-colors"
-                  >
-                    {l.label}
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Navigation</p>
+              <ul className="mt-4 space-y-3">
+                {navLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      onClick={(e) => handleAnchorClick(e, link.href)}
+                      className="text-sm text-foreground/85 transition-colors hover:text-primary"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Mere</p>
+              <ul className="mt-4 space-y-3 text-sm">
+                <li>
+                  <Link to="/festivaler" className="text-foreground/85 transition-colors hover:text-primary">
+                    Festivaler 2026
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/blog" className="text-foreground/85 transition-colors hover:text-primary">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/lej-soundboks-aalborg" className="text-foreground/85 transition-colors hover:text-primary">
+                    Lej Soundboks Aalborg
+                  </Link>
+                </li>
+                <li>
+                  <a href="mailto:rasmuscarl@hotmail.com" className="text-foreground/85 transition-colors hover:text-primary">
+                    rasmuscarl@hotmail.com
                   </a>
                 </li>
-              ))}
-            </ul>
+                <li>
+                  <a href="tel:+4553540096" className="text-foreground/85 transition-colors hover:text-primary">
+                    +45 53 54 00 96
+                  </a>
+                </li>
+                <li className="text-muted-foreground">Kjellerupsgade 4, 9000 Aalborg</li>
+              </ul>
+            </div>
           </div>
 
-          {/* Links & contact */}
-          <div>
-            <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-3">Mere</p>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/festivaler" className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                  Festivaler 2026
-                </Link>
-              </li>
-              <li>
-                <Link to="/blog" className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link to="/lej-soundboks-aalborg" className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                  Lej Soundboks Aalborg
-                </Link>
-              </li>
-              <li>
-                <a href="mailto:rasmuscarl@hotmail.com" className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                  rasmuscarl@hotmail.com
-                </a>
-              </li>
-              <li>
-                <a href="tel:+4553540096" className="text-muted-foreground hover:text-primary text-sm transition-colors">
-                  +45 53 54 00 96
-                </a>
-              </li>
-              <li>
-                <p className="text-muted-foreground text-sm">Kjellerupsgade 4, 9000 Aalborg</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-border pt-6 text-center">
-          <p className="text-muted-foreground text-sm">
+          <div className="mt-8 border-t border-white/8 pt-5 text-sm text-muted-foreground">
             © {new Date().getFullYear()} LejDinLyd · CVR: 43952919 · Alle rettigheder forbeholdes.
-          </p>
+          </div>
         </div>
       </div>
     </motion.footer>

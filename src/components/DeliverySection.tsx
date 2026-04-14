@@ -3,58 +3,53 @@ import { MapPin, Truck } from "lucide-react";
 
 const DeliverySection = () => {
   return (
-    <section id="levering" className="py-24 px-6 bg-secondary/30 overflow-hidden">
-      <div className="container mx-auto max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Levering &amp; <span className="text-primary">afhentning</span>
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Vi gør det nemt at leje en Soundboks i Aalborg – uanset hvor du befinder dig
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="rounded-2xl border border-border bg-card p-8"
-          >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-              <Truck className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="font-heading text-xl font-bold mb-3">Levering i Aalborg &amp; omegn</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Bor du i Aalborg eller nærområdet? Så kan vi levere din Soundboks Go direkte til din adresse. 
-              Kontakt os for at aftale levering – det er nemt og fleksibelt.
+    <section id="levering" className="px-6 py-24 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="section-shell grid gap-6 rounded-[2.4rem] p-7 md:grid-cols-[0.8fr_1.2fr] md:p-10">
+          <div>
+            <span className="eyebrow">Levering & afhentning</span>
+            <h2 className="mt-5 text-4xl font-bold text-foreground md:text-5xl">
+              Praktikken skal være lige så enkel som bookingflowet.
+            </h2>
+            <p className="mt-4 text-base leading-8 text-muted-foreground">
+              Vi holder logistikken enkel, så du hurtigt kan vælge den løsning der passer bedst til din fest.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="rounded-2xl border border-border bg-card p-8"
-          >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-              <MapPin className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="font-heading text-xl font-bold mb-3">Afhentning uden for området</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Bor du uden for Aalborg og nærområdet? Ingen problem – du kan afhente højttaleren på vores adresse: 
-              <strong className="text-foreground"> Kjellerupsgade 4, 9000 Aalborg</strong>. 
-              Vi aftaler et tidspunkt der passer dig.
-            </p>
-          </motion.div>
+          <div className="grid gap-5 md:grid-cols-2">
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45 }}
+              className="rounded-[1.8rem] border border-white/8 bg-background/45 p-6"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-[1rem] bg-primary/12">
+                <Truck className="h-5 w-5 text-primary" />
+              </div>
+              <h3 className="font-heading text-2xl font-semibold text-foreground">Levering i Aalborg & omegn</h3>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                Bor du i Aalborg eller nærområdet, kan vi levere din Soundboks Go direkte til adressen. Vi aftaler det
+                praktiske hurtigt og fleksibelt.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: 0.08 }}
+              className="rounded-[1.8rem] border border-white/8 bg-background/45 p-6"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-[1rem] bg-primary/12">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
+              <h3 className="font-heading text-2xl font-semibold text-foreground">Afhentning uden for området</h3>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                Bor du uden for Aalborg, kan du afhente højttaleren på <span className="font-semibold text-foreground">Kjellerupsgade 4, 9000 Aalborg</span>. Vi finder et tidspunkt der passer dig.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,122 +1,85 @@
 import { motion } from "framer-motion";
-import { CalendarDays, PartyPopper, Music, ShieldCheck, Banknote, Clock } from "lucide-react";
+import { Banknote, CalendarDays, Clock, Music, PartyPopper, ShieldCheck } from "lucide-react";
 
 const plans = [
-  { icon: CalendarDays, label: "Søndag – Torsdag", price: "150", href: "#booking" },
-  { icon: PartyPopper, label: "Fredag – Lørdag", price: "300", href: "#booking", featured: true },
-  { icon: Music, label: "Festivaler & Events", price: null, href: "#kontakt" },
+  { icon: CalendarDays, label: "Søndag - torsdag", price: "150", detail: "Perfekt til de rolige hverdagsbookinger." },
+  { icon: PartyPopper, label: "Fredag - lørdag", price: "300", detail: "Den mest populære weekendløsning.", featured: true },
+  { icon: Music, label: "Festivaler & events", price: null, detail: "Få et skræddersyet tilbud til større behov." },
 ];
 
 const PricingSection = () => {
   return (
-    <section id="priser" className="py-24 px-6 overflow-hidden">
-      <div className="container mx-auto max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Simple <span className="text-primary">priser</span>
-          </h2>
-          <p className="text-muted-foreground text-lg">Ingen skjulte gebyrer. Ingen overraskelser.</p>
-        </motion.div>
+    <section id="priser" className="px-6 py-24 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+          <div className="lg:sticky lg:top-28">
+            <span className="eyebrow">Priser der er til at forstå</span>
+            <h2 className="mt-5 text-4xl font-bold text-foreground md:text-6xl">
+              Simple priser. Stærk lyd. Ingen skjulte gebyrer.
+            </h2>
+            <p className="mt-4 max-w-xl text-lg leading-8 text-muted-foreground">
+              Du skal kunne forstå prisen med det samme. Derfor er modellen enkel: hverdage, weekender og specialtilbud
+              til events, uden depositum og uden overraskelser.
+            </p>
+            <div className="mt-8 grid gap-3">
+              {[
+                { icon: ShieldCheck, text: "Intet depositum" },
+                { icon: Banknote, text: "Betal ved overlevering" },
+                { icon: Clock, text: "Fleksibel afhentning" },
+              ].map((badge) => (
+                <div key={badge.text} className="section-shell flex items-center gap-3 px-4 py-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/12">
+                    <badge.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">{badge.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {plans.map((plan, i) => (
-            <a href={plan.href} key={plan.label}>
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
+          <div className="grid gap-5 md:grid-cols-3">
+            {plans.map((plan, index) => (
+              <motion.a
+                key={plan.label}
+                href={plan.price ? "#booking" : "#kontakt"}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                whileHover={{ y: -8, transition: { duration: 0.25 } }}
-                className={`rounded-2xl border bg-card p-8 text-center cursor-pointer transition-colors h-full flex flex-col items-center justify-center relative overflow-hidden ${
-                  plan.featured
-                    ? "border-primary/30 hover:border-primary/60"
-                    : "border-border hover:border-primary/40"
+                transition={{ duration: 0.45, delay: index * 0.08 }}
+                whileHover={{ y: -6 }}
+                className={`section-shell group relative flex min-h-[25rem] flex-col overflow-hidden rounded-[2rem] p-6 ${
+                  plan.featured ? "border-primary/40 bg-primary/[0.08]" : ""
                 }`}
               >
                 {plan.featured && (
-                  <>
-                    <div className="absolute inset-0 bg-primary/5" />
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent skew-x-12"
-                      animate={{ x: ["-100%", "200%"] }}
-                      transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
-                    />
-                  </>
+                  <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(24_95%_56%_/_0.12),transparent_45%)]" />
                 )}
-                <div className="relative">
-                  <motion.div
-                    whileHover={{ rotate: 12 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <plan.icon className={`w-10 h-10 mx-auto mb-4 ${plan.featured ? "text-primary" : "text-muted-foreground"}`} />
-                  </motion.div>
-                  <p className={`text-sm uppercase tracking-wider font-heading mb-2 ${plan.featured ? "text-primary" : "text-muted-foreground"}`}>
+                <div className="relative flex h-full flex-col">
+                  <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-white/6">
+                    <plan.icon className={`h-6 w-6 ${plan.featured ? "text-primary" : "text-muted-foreground"}`} />
+                  </div>
+                  <p className={`text-xs uppercase tracking-[0.28em] ${plan.featured ? "text-primary" : "text-muted-foreground"}`}>
                     {plan.label}
                   </p>
-                  {plan.price ? (
-                    <>
-                      <p className="font-heading text-5xl font-bold text-foreground mb-1">
-                        {plan.price} <span className="text-xl font-normal text-muted-foreground">DKK</span>
+                  <div className="mt-6">
+                    {plan.price ? (
+                      <p className="font-heading text-6xl font-bold text-foreground">
+                        {plan.price}
+                        <span className="ml-2 text-lg font-medium text-muted-foreground">DKK</span>
                       </p>
-                      <p className="text-muted-foreground">per dag</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="font-heading text-2xl font-bold text-foreground mb-1">Specialpris</p>
-                      <p className="text-muted-foreground text-sm">Kontakt os for et skræddersyet tilbud</p>
-                    </>
-                  )}
+                    ) : (
+                      <p className="font-heading text-4xl font-bold text-foreground">Specialpris</p>
+                    )}
+                    <p className="mt-3 text-sm leading-7 text-muted-foreground">{plan.detail}</p>
+                  </div>
+                  <div className="mt-auto pt-10 text-sm font-semibold text-primary">
+                    {plan.price ? "Gå til booking" : "Kontakt os for pris"}
+                  </div>
                 </div>
-              </motion.div>
-            </a>
-          ))}
+              </motion.a>
+            ))}
+          </div>
         </div>
-
-        {/* Trust badges */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.35 }}
-          className="mt-8 flex flex-wrap justify-center gap-4"
-        >
-          {[
-            { icon: ShieldCheck, text: "Intet depositum" },
-            { icon: Banknote, text: "Betal ved overlevering" },
-            { icon: Clock, text: "Fleksibel afhentning" },
-          ].map((badge) => (
-            <div
-              key={badge.text}
-              className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-5 py-2"
-            >
-              <badge.icon className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-foreground">{badge.text}</span>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-8 text-center"
-        >
-          <motion.a
-            href="#booking"
-            className="inline-flex items-center justify-center px-10 py-4 rounded-xl bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Book nu
-          </motion.a>
-        </motion.div>
       </div>
     </section>
   );

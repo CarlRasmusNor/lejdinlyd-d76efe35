@@ -29,6 +29,7 @@ const BookingSection = () => {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [speakerCount, setSpeakerCount] = useState(1);
+  const [extraBattery, setExtraBattery] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bookedCounts, setBookedCounts] = useState<Record<string, number>>({});
@@ -92,11 +93,14 @@ const BookingSection = () => {
 
     setLoading(true);
     try {
+      const batteryNote = extraBattery ? "✓ Ekstra batteri ønskes (+50 kr/dag)" : "";
+      const combinedMessage = [batteryNote, result.data.message].filter(Boolean).join("\n") || null;
+
       const { error } = await supabase.from("bookings").insert({
         name: result.data.name,
         phone: result.data.phone,
         email: result.data.email,
-        message: result.data.message || null,
+        message: combinedMessage,
         date_from: format(dateRange.from, "yyyy-MM-dd"),
         date_to: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
         speaker_count: speakerCount,
@@ -111,10 +115,11 @@ const BookingSection = () => {
         name: result.data.name,
         email: result.data.email,
         phone: result.data.phone,
-        message: result.data.message || null,
+        message: combinedMessage,
         dateFrom: format(dateRange.from, "yyyy-MM-dd"),
         dateTo: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
         speakerCount,
+        extraBattery,
         totalPrice: priceBreakdown.total,
       };
 
@@ -169,8 +174,11 @@ const BookingSection = () => {
 
     total *= speakerCount;
 
-    return { days, weekdayDays, weekendDays, total };
-  }, [dateRange, speakerCount]);
+    const batteryTotal = extraBattery ? days * 50 : 0;
+    total += batteryTotal;
+
+    return { days, weekdayDays, weekendDays, batteryTotal, total };
+  }, [dateRange, speakerCount, extraBattery]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -304,6 +312,32 @@ const BookingSection = () => {
               </p>
             )}
 
+            {/* Extra battery */}
+            <div
+              onClick={() => setExtraBattery((v) => !v)}
+              className={cn(
+                "flex items-center gap-4 rounded-xl border px-5 py-4 cursor-pointer transition-colors select-none",
+                extraBattery ? "border-primary/50 bg-primary/5" : "border-border bg-secondary hover:border-primary/30"
+              )}
+            >
+              <div className={cn(
+                "w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors",
+                extraBattery ? "border-primary bg-primary" : "border-border bg-background"
+              )}>
+                {extraBattery && <svg viewBox="0 0 10 8" className="w-3 h-3 text-primary-foreground fill-none stroke-current stroke-2"><polyline points="1,4 4,7 9,1" /></svg>}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-heading font-semibold text-foreground">Ekstra batteri</p>
+                <p className="text-xs text-muted-foreground">Forlænget spilletid – +50 kr. per dag</p>
+              </div>
+              {priceBreakdown && extraBattery && (
+                <span className="text-sm font-medium text-primary">+{priceBreakdown.batteryTotal} DKK</span>
+              )}
+              {!extraBattery && (
+                <span className="text-xs text-muted-foreground">+50 kr/dag</span>
+              )}
+            </div>
+
             {/* Price breakdown */}
             {priceBreakdown && (
               <motion.div
@@ -327,6 +361,14 @@ const BookingSection = () => {
                       {priceBreakdown.weekendDays} weekenddag{priceBreakdown.weekendDays > 1 ? "e" : ""} × 300 DKK{speakerCount > 1 ? ` × ${speakerCount} stk` : ""}
                     </span>
                     <span className="text-foreground font-medium">{priceBreakdown.weekendDays * 300 * speakerCount} DKK</span>
+                  </div>
+                )}
+                {priceBreakdown.batteryTotal > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      Ekstra batteri × {priceBreakdown.days} dag{priceBreakdown.days > 1 ? "e" : ""} × 50 DKK
+                    </span>
+                    <span className="text-foreground font-medium">{priceBreakdown.batteryTotal} DKK</span>
                   </div>
                 )}
                 <div className="border-t border-border pt-2 mt-2 flex justify-between">

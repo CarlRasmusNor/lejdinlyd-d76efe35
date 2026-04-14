@@ -122,6 +122,80 @@ Hos **LejDinLyd** kan du nemt og billigt **leje en højtaler til fest i Aalborg*
     `.trim(),
   },
   {
+    slug: "soundboks-til-festival",
+    title: "Soundboks Go til festival – derfor er det et must i campen",
+    metaTitle: "Soundboks til festival 2026 – Roskilde, Smukfest, Nibe | LejDinLyd",
+    metaDescription: "Lej en Soundboks Go til årets festival. Vi fortæller hvorfor en Soundboks er det bedste valg til campen – og hvor du får den billigst i Danmark.",
+    excerpt: "En Soundboks Go i campen gør enhver festival ti gange bedre. Vi fortæller hvorfor – og hvordan du lejer en til Roskilde, Smukfest eller Nibe.",
+    date: "2026-04-14",
+    readTime: "5 min",
+    image: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&q=80",
+    content: `
+## Festival uden musik i campen? Det dur ikke
+
+Du har billet, telt og venner klar. Men hvad sker der, når I er tilbage i campen efter en aften foran scenen? Uden en ordentlig højtaler dør stemningen hurtigt. En **Soundboks Go** er løsningen – og den er designet præcis til den situation.
+
+## Hvorfor en Soundboks Go er perfekt til festival
+
+### 1. Batteriet holder hele festivalen
+
+En Soundboks Go har op til **40 timers batteritid**. Det betyder, at du kan spille musik fra I vågner til I falder i seng – i flere dage i træk – uden at finde en stikkontakt. På en festival er det guld værd.
+
+### 2. Den er byggget til udendørs brug
+
+Dansk festivalvejr kan være uforudsigeligt. Soundboks Go er **IP65-klassificeret**, hvilket vil sige at den tåler regn, støv og stænk. Sæt den op uden bekymringer – den klarer det hele.
+
+### 3. 121 dB slår gennem støjen
+
+En festival er fuld af lyde. Naborækker, scener langt væk, folk der råber. En Soundboks Go spiller op til **121 dB** – det er nok til at fylde hele jeres campingsektion med god musik, selv når der er gang i naborækken.
+
+### 4. Bluetooth gør det enkelt
+
+Ingen kabler, ingen besvær. Forbind din telefon via Bluetooth, og alle i gruppen kan skifte sang direkte fra deres mobil. Det er den nemmeste opsætning til festival, du finder.
+
+### 5. Den er nem at transportere
+
+Soundboks Go vejer cirka 14 kg og har et robust håndtag. Bær den fra parkeringspladsen til campingpladsen – og flyt den rundt i campen som det passer jer.
+
+## Soundboks til Roskilde, Smukfest og Nibe
+
+Uanset hvilken festival du tager afsted til, gælder de samme principper:
+
+- **[Roskilde Festival](/festivaler)** – 8 dage i campen kræver god batteritid og robusthed. En Soundboks Go er klar fra dag 1 til dag 8.
+- **[Smukfest](/festivaler)** – Musikken i skoven fortjener ordentlig baglyd i campen. En Soundboks klinger godt under træerne.
+- **[Nibe Festival](/festivaler)** – Nordjyllands hyggefestival med et tæt camp-community. En Soundboks samler folk.
+
+Vi hos **LejDinLyd** er baseret i Aalborg – tæt på Nibe – og tilbyder særlig lavprisudlejning til nordjyske festivaler.
+
+## Hvad koster det at leje en Soundboks til festival?
+
+Hos LejDinLyd er priserne sat til at ligge **klart under markedet**:
+
+- **Roskilde Festival (8 dage):** 1.999 kr
+- **Smukfest (5 dage):** 1.799 kr
+- **Nibe Festival (4 dage):** 1.499 kr
+- **Jelling Festival (5 dage):** 1.499 kr
+
+Ingen depositum. Du betaler ved overlevering.
+
+## Alternativet: køb eller medbring egen højtaler?
+
+Mange overvejer at købe en billig Bluetooth-højtaler til festivalen. Problemet er, at de fleste billige højttalere **ikke kan følge med til en festival**:
+
+- For lav lydstyrke – drukner i støj fra nabocampen
+- Kortere batteritid – løber tør midtvejs i aftenen
+- Ikke vandtætte nok til regnfulde festivalnætter
+
+En lejet Soundboks Go til 1.499–1.999 kr giver dig festivalkvalitet til campingpris – og du slipper for at eje og opbevare den resten af året.
+
+## Book din festival-Soundboks nu
+
+Vi udlejer til alle de store festivaler i Danmark. [Se alle festivaler og priser](/festivaler) eller book direkte via formularen på forsiden.
+
+Afhentning sker på **Kjellerupsgade 4, 9000 Aalborg** – og til Nibe Festival kan vi tilbyde levering direkte til festivalspladsen.
+    `.trim(),
+  },
+  {
     slug: "soundboks-perfekt-til-fest-og-events",
     title: "Derfor er en Soundboks perfekt til fest og events",
     metaTitle: "Soundboks til fest og events i Aalborg | LejDinLyd",

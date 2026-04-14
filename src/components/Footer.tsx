@@ -70,6 +70,11 @@ const Footer = () => {
             <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-3">Mere</p>
             <ul className="space-y-2">
               <li>
+                <Link to="/festivaler" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                  Festivaler 2026
+                </Link>
+              </li>
+              <li>
                 <Link to="/blog" className="text-muted-foreground hover:text-primary text-sm transition-colors">
                   Blog
                 </Link>

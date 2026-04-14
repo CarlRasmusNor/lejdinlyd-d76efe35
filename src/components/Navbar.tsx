@@ -67,6 +67,22 @@ const Navbar = () => {
             transition={{ delay: 0.3 + links.length * 0.08 }}
           >
             <Link
+              to="/festivaler"
+              className={`text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${
+                location.pathname === "/festivaler"
+                  ? "text-primary"
+                  : "text-foreground hover:text-primary"
+              }`}
+            >
+              Festivaler
+            </Link>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 + (links.length + 1) * 0.08 }}
+          >
+            <Link
               to="/blog"
               className={`text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${
                 location.pathname.startsWith("/blog")
@@ -124,6 +140,23 @@ const Navbar = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: links.length * 0.05 }}
+            >
+              <Link
+                to="/festivaler"
+                onClick={() => setOpen(false)}
+                className={`block font-medium transition-colors ${
+                  location.pathname === "/festivaler"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Festivaler
+              </Link>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: (links.length + 1) * 0.05 }}
             >
               <Link
                 to="/blog"

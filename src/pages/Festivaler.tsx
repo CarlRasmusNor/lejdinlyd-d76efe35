@@ -4,7 +4,7 @@ import { MapPin, Calendar, ArrowLeft, Music, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BookingSection from "@/components/BookingSection";
+import FestivalBookingSection from "@/components/FestivalBookingSection";
 
 const festivals = [
   {
@@ -325,11 +325,7 @@ const Festivaler = () => {
       </section>
 
       {/* Booking */}
-      <BookingSection
-        prefilledFrom={selectedFestival?.dateFrom}
-        prefilledTo={selectedFestival?.dateTo}
-        festivalName={selectedFestival?.name}
-      />
+      <FestivalBookingSection festival={selectedFestival} />
 
       <Footer />
     </>

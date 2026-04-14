@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Send, Minus, Plus, CalendarIcon, Loader2, Music } from "lucide-react";
+import { Send, Minus, Plus, CalendarIcon, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Calendar } from "@/components/ui/calendar";
@@ -25,13 +25,7 @@ const bookingSchema = z.object({
   message: z.string().max(1000, "Beskeden er for lang (maks 1000 tegn)").optional(),
 });
 
-interface BookingSectionProps {
-  prefilledFrom?: string; // ISO yyyy-MM-dd
-  prefilledTo?: string;   // ISO yyyy-MM-dd
-  festivalName?: string;
-}
-
-const BookingSection = ({ prefilledFrom, prefilledTo, festivalName }: BookingSectionProps = {}) => {
+const BookingSection = () => {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [speakerCount, setSpeakerCount] = useState(1);
@@ -40,18 +34,6 @@ const BookingSection = ({ prefilledFrom, prefilledTo, festivalName }: BookingSec
   const [loading, setLoading] = useState(false);
   const [bookedCounts, setBookedCounts] = useState<Record<string, number>>({});
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const prevFestivalRef = useRef<string | undefined>();
-
-  // Pre-fill dates when a festival is selected
-  useEffect(() => {
-    if (!prefilledFrom || prefilledFrom === prevFestivalRef.current) return;
-    prevFestivalRef.current = prefilledFrom;
-    setDateRange({
-      from: parseISO(prefilledFrom),
-      to: prefilledTo ? parseISO(prefilledTo) : undefined,
-    });
-    setSubmitted(false);
-  }, [prefilledFrom, prefilledTo]);
 
   // Fetch existing bookings to calculate availability per day
   useEffect(() => {
@@ -264,15 +246,6 @@ const BookingSection = ({ prefilledFrom, prefilledTo, festivalName }: BookingSec
             onSubmit={handleSubmit}
             className="rounded-2xl border border-border bg-card p-8 space-y-6"
           >
-            {festivalName && (
-              <div className="flex items-center gap-3 rounded-xl bg-primary/10 border border-primary/20 px-5 py-3">
-                <Music className="w-4 h-4 text-primary flex-shrink-0" />
-                <p className="text-sm font-heading font-semibold text-primary">
-                  Du booker til <span className="text-foreground">{festivalName}</span>
-                </p>
-              </div>
-            )}
-
             <div>
               <label className="block font-heading font-semibold text-sm mb-3">Vælg dato(er)</label>
               <Popover>

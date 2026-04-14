@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Calendar, ArrowLeft, Music, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -12,6 +12,8 @@ const festivals = [
     slug: "roskilde",
     location: "Roskilde",
     dates: "27. juni – 4. juli 2026",
+    dateFrom: "2026-06-27",
+    dateTo: "2026-07-04",
     days: 8,
     price: 1999,
     competitorPrice: 2399,
@@ -24,6 +26,8 @@ const festivals = [
     slug: "smukfest",
     location: "Skanderborg",
     dates: "5. – 9. august 2026",
+    dateFrom: "2026-08-05",
+    dateTo: "2026-08-09",
     days: 5,
     price: 1799,
     competitorPrice: 2199,
@@ -36,6 +40,8 @@ const festivals = [
     slug: "nibe",
     location: "Nibe (tæt på Aalborg)",
     dates: "25. – 28. juni 2026",
+    dateFrom: "2026-06-25",
+    dateTo: "2026-06-28",
     days: 4,
     price: 1499,
     competitorPrice: 1899,
@@ -48,6 +54,8 @@ const festivals = [
     slug: "jelling",
     location: "Jelling",
     dates: "20. – 24. maj 2026",
+    dateFrom: "2026-05-20",
+    dateTo: "2026-05-24",
     days: 5,
     price: 1499,
     competitorPrice: 1899,
@@ -60,6 +68,8 @@ const festivals = [
     slug: "tinderbox",
     location: "Odense",
     dates: "25. – 27. juni 2026",
+    dateFrom: "2026-06-25",
+    dateTo: "2026-06-27",
     days: 3,
     price: 1299,
     competitorPrice: 1599,
@@ -72,6 +82,8 @@ const festivals = [
     slug: "northside",
     location: "Aarhus",
     dates: "4. – 6. juni 2026",
+    dateFrom: "2026-06-04",
+    dateTo: "2026-06-06",
     days: 3,
     price: 1299,
     competitorPrice: 1499,
@@ -84,6 +96,8 @@ const festivals = [
     slug: "copenhell",
     location: "København",
     dates: "11. – 14. juni 2026",
+    dateFrom: "2026-06-11",
+    dateTo: "2026-06-14",
     days: 4,
     price: 1399,
     competitorPrice: 1699,
@@ -96,6 +110,8 @@ const festivals = [
     slug: "gron-koncert",
     location: "Flere byer i Danmark",
     dates: "Juli – august 2026",
+    dateFrom: "2026-07-01",
+    dateTo: undefined,
     days: 1,
     price: 299,
     competitorPrice: 399,
@@ -115,6 +131,15 @@ const included = [
 ];
 
 const Festivaler = () => {
+  const [selectedFestival, setSelectedFestival] = useState<typeof festivals[0] | null>(null);
+
+  const handleBook = (festival: typeof festivals[0]) => {
+    setSelectedFestival(festival);
+    setTimeout(() => {
+      document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   useEffect(() => {
     document.title = "Lej Soundboks til Festival 2026 – Roskilde, Smukfest, Nibe | LejDinLyd";
     const metaDesc = document.querySelector('meta[name="description"]');
@@ -266,13 +291,12 @@ const Festivaler = () => {
                       <p className="text-muted-foreground line-through text-sm">fra {f.competitorPrice.toLocaleString("da-DK")} DKK</p>
                     </div>
                   </div>
-                  <a
-                    href="#booking"
-                    onClick={(e) => { e.preventDefault(); document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" }); }}
+                  <button
+                    onClick={() => handleBook(f)}
                     className="block w-full text-center py-3 rounded-xl bg-primary text-primary-foreground font-heading font-semibold text-sm hover:opacity-90 transition-all"
                   >
                     Book til {f.name.split(" ")[0]}
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -301,7 +325,11 @@ const Festivaler = () => {
       </section>
 
       {/* Booking */}
-      <BookingSection />
+      <BookingSection
+        prefilledFrom={selectedFestival?.dateFrom}
+        prefilledTo={selectedFestival?.dateTo}
+        festivalName={selectedFestival?.name}
+      />
 
       <Footer />
     </>

@@ -190,19 +190,12 @@ const Festivaler = () => {
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex justify-center"
           >
-            <a
-              href="#booking"
-              onClick={(e) => { e.preventDefault(); document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all"
-            >
-              Book din festival-lyd
-            </a>
             <a
               href="#festivaler"
               onClick={(e) => { e.preventDefault(); document.querySelector("#festivaler")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all"
             >
               Se alle festivaler
             </a>

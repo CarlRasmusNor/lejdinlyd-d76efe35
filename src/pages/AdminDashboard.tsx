@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO, eachDayOfInterval } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper, XCircle } from "lucide-react";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper, XCircle, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";
@@ -218,6 +218,7 @@ const AdminDashboard = () => {
             onSendEmail={handleSendEmail}
             onSendReview={handleSendReview}
             sendingEmail={sendingEmail}
+            showFilters
           />
         ) : null}
 
@@ -244,6 +245,13 @@ const StatCard = ({ icon, label, value }: { icon: React.ReactNode; label: string
   </div>
 );
 
+const STATUS_OPTIONS = [
+  { value: "all", label: "Alle statuser" },
+  { value: "confirmed", label: "Bekræftede" },
+  { value: "pending", label: "Afventende" },
+  { value: "rejected", label: "Afviste" },
+];
+
 const BookingsTable = ({
   title,
   bookings,
@@ -254,6 +262,7 @@ const BookingsTable = ({
   onSendEmail,
   onSendReview,
   sendingEmail,
+  showFilters = false,
 }: {
   title: string;
   bookings: Booking[];
@@ -264,56 +273,160 @@ const BookingsTable = ({
   onSendEmail: (booking: Booking) => void;
   onSendReview: (booking: Booking) => void;
   sendingEmail: string | null;
-}) => (
-  <div className="space-y-2">
-    <h2 className="font-heading font-bold text-lg">{title}</h2>
-    <div className="rounded-xl border border-border overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-border bg-secondary/50">
-            <th className="text-left px-4 py-3 font-heading font-semibold">Status</th>
-            <th className="text-left px-4 py-3 font-heading font-semibold">Dato</th>
-            <th className="text-left px-4 py-3 font-heading font-semibold">Navn</th>
-            <th className="text-left px-4 py-3 font-heading font-semibold hidden sm:table-cell">Email</th>
-            <th className="text-left px-4 py-3 font-heading font-semibold hidden md:table-cell">Telefon</th>
-            <th className="text-center px-4 py-3 font-heading font-semibold">Stk</th>
-            <th className="text-right px-4 py-3 font-heading font-semibold">Pris</th>
-            <th className="text-right px-4 py-3 font-heading font-semibold">Handlinger</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bookings.map((b) => (
-            <tr key={b.id} id={`booking-row-${b.id}`} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-              <td className="px-4 py-3">
-                <BookingStatusBadge status={b.status} />
-              </td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                {format(parseISO(b.date_from), "d. MMM", { locale: da })}
-                {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM", { locale: da })}`}
-              </td>
-              <td className="px-4 py-3 font-medium">{b.name}</td>
-              <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{b.email}</td>
-              <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{b.phone}</td>
-              <td className="px-4 py-3 text-center">{b.speaker_count}</td>
-              <td className="px-4 py-3 text-right font-medium text-primary">{b.total_price} DKK</td>
-              <td className="px-4 py-3 text-right">
-                <BookingActions
-                  booking={b}
-                  onConfirm={onConfirm}
-                  onReject={onReject}
-                  onDelete={onDelete}
-                  onEdit={onEdit}
-                  onSendEmail={onSendEmail}
-                  onSendReview={onSendReview}
-                  sendingEmail={sendingEmail}
-                />
-              </td>
+  showFilters?: boolean;
+}) => {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
+  const filtered = useMemo(() => {
+    return bookings.filter((b) => {
+      if (statusFilter !== "all" && b.status !== statusFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        if (
+          !b.name.toLowerCase().includes(q) &&
+          !b.email.toLowerCase().includes(q) &&
+          !b.phone.toLowerCase().includes(q)
+        ) return false;
+      }
+      if (dateFrom && b.date_from < dateFrom) return false;
+      if (dateTo && b.date_from > dateTo) return false;
+      return true;
+    });
+  }, [bookings, search, statusFilter, dateFrom, dateTo]);
+
+  const hasActiveFilters = search || statusFilter !== "all" || dateFrom || dateTo;
+
+  const clearFilters = () => {
+    setSearch("");
+    setStatusFilter("all");
+    setDateFrom("");
+    setDateTo("");
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="font-heading font-bold text-lg">{title}</h2>
+        {showFilters && hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <X className="w-3.5 h-3.5" /> Ryd filtre
+          </button>
+        )}
+      </div>
+
+      {showFilters && (
+        <div className="flex flex-wrap gap-3">
+          {/* Search */}
+          <div className="relative flex-1 min-w-[180px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Søg navn, email, tlf…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+            />
+          </div>
+
+          {/* Status */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+          >
+            {STATUS_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+
+          {/* Date from */}
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            title="Fra dato"
+            className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+
+          {/* Date to */}
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            title="Til dato"
+            className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </div>
+      )}
+
+      <div className="rounded-xl border border-border overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border bg-secondary/50">
+              <th className="text-left px-4 py-3 font-heading font-semibold">Status</th>
+              <th className="text-left px-4 py-3 font-heading font-semibold">Dato</th>
+              <th className="text-left px-4 py-3 font-heading font-semibold">Navn</th>
+              <th className="text-left px-4 py-3 font-heading font-semibold hidden sm:table-cell">Email</th>
+              <th className="text-left px-4 py-3 font-heading font-semibold hidden md:table-cell">Telefon</th>
+              <th className="text-center px-4 py-3 font-heading font-semibold">Stk</th>
+              <th className="text-right px-4 py-3 font-heading font-semibold">Pris</th>
+              <th className="text-right px-4 py-3 font-heading font-semibold">Handlinger</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground text-sm">
+                  Ingen bookinger matcher dine filtre.
+                </td>
+              </tr>
+            ) : (
+              filtered.map((b) => (
+                <tr key={b.id} id={`booking-row-${b.id}`} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                  <td className="px-4 py-3">
+                    <BookingStatusBadge status={b.status} />
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {format(parseISO(b.date_from), "d. MMM", { locale: da })}
+                    {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM", { locale: da })}`}
+                  </td>
+                  <td className="px-4 py-3 font-medium">{b.name}</td>
+                  <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{b.email}</td>
+                  <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{b.phone}</td>
+                  <td className="px-4 py-3 text-center">{b.speaker_count}</td>
+                  <td className="px-4 py-3 text-right font-medium text-primary">{b.total_price} DKK</td>
+                  <td className="px-4 py-3 text-right">
+                    <BookingActions
+                      booking={b}
+                      onConfirm={onConfirm}
+                      onReject={onReject}
+                      onDelete={onDelete}
+                      onEdit={onEdit}
+                      onSendEmail={onSendEmail}
+                      onSendReview={onSendReview}
+                      sendingEmail={sendingEmail}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {showFilters && filtered.length > 0 && filtered.length !== bookings.length && (
+        <p className="text-xs text-muted-foreground">
+          Viser {filtered.length} af {bookings.length} bookinger
+        </p>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 export default AdminDashboard;

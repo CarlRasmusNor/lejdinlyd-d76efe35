@@ -27,19 +27,25 @@ const Footer = () => {
     }
   };
 
+  const linkClass =
+    "text-muted-foreground hover:text-primary text-sm transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left pb-0.5";
+
   return (
     <motion.footer
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="border-t border-border py-12 px-6"
+      className="border-t-2 border-border py-12 px-6"
     >
       <div className="container mx-auto max-w-5xl">
-        <div className="grid sm:grid-cols-3 gap-8 mb-10">
+        <div className="grid sm:grid-cols-3 gap-10 mb-10">
           {/* Brand */}
           <div>
-            <Link to="/" className="font-heading font-bold text-lg text-primary mb-2 inline-block hover:opacity-80 transition-opacity">
+            <Link
+              to="/"
+              className="font-heading font-bold text-lg text-primary mb-3 inline-block hover:opacity-80 transition-opacity"
+            >
               LejDinLyd
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -49,14 +55,16 @@ const Footer = () => {
 
           {/* Navigation */}
           <div>
-            <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-3">Navigation</p>
-            <ul className="space-y-2">
+            <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-4">
+              Navigation
+            </p>
+            <ul className="space-y-2.5">
               {navLinks.map((l) => (
                 <li key={l.href}>
                   <a
                     href={l.href}
                     onClick={(e) => handleAnchorClick(e, l.href)}
-                    className="text-muted-foreground hover:text-primary text-sm transition-colors"
+                    className={linkClass}
                   >
                     {l.label}
                   </a>
@@ -67,41 +75,46 @@ const Footer = () => {
 
           {/* Links & contact */}
           <div>
-            <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-3">Mere</p>
-            <ul className="space-y-2">
+            <p className="font-heading font-semibold text-sm uppercase tracking-wide text-foreground mb-4">
+              Mere
+            </p>
+            <ul className="space-y-2.5">
               <li>
-                <Link to="/festivaler" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                <Link to="/festivaler" className={linkClass}>
                   Festivaler 2026
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                <Link to="/blog" className={linkClass}>
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/lej-soundboks-aalborg" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                <Link to="/lej-soundboks-aalborg" className={linkClass}>
                   Lej Soundboks Aalborg
                 </Link>
               </li>
-              <li>
-                <a href="mailto:rasmuscarl@hotmail.com" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+              <li className="pt-1">
+                <a href="mailto:rasmuscarl@hotmail.com" className={linkClass}>
                   rasmuscarl@hotmail.com
                 </a>
               </li>
               <li>
-                <a href="tel:+4553540096" className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                <a href="tel:+4553540096" className={linkClass}>
                   +45 53 54 00 96
                 </a>
               </li>
               <li>
-                <p className="text-muted-foreground text-sm">Kjellerupsgade 4, 9000 Aalborg</p>
+                <p className="text-muted-foreground text-sm">
+                  Kjellerupsgade 4, 9000 Aalborg
+                </p>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-border pt-6 text-center">
+        <hr className="border-border mb-6" />
+        <div className="text-center">
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} LejDinLyd · CVR: 43952919 · Alle rettigheder forbeholdes.
           </p>

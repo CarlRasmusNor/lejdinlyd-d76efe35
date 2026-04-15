@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -10,11 +10,23 @@ const links = [
   { href: "#kontakt", label: "Kontakt" },
 ];
 
+const pageLinks = [
+  { to: "/festivaler", label: "Festivaler" },
+  { to: "/blog", label: "Blog" },
+];
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleAnchorClick = (
     e: React.MouseEvent,
@@ -34,12 +46,21 @@ const Navbar = () => {
     }
   };
 
+  const isActivePage = (path: string) =>
+    path === "/blog"
+      ? location.pathname.startsWith("/blog")
+      : location.pathname === path;
+
   return (
     <motion.nav
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50"
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
+        scrolled
+          ? "bg-background/95 backdrop-blur-xl border-border/80 shadow-sm"
+          : "bg-background/80 backdrop-blur-lg border-border/50"
+      }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between h-16">
         <Link to="/" className="font-heading font-bold text-xl text-primary">
@@ -61,38 +82,27 @@ const Navbar = () => {
               {l.label}
             </motion.a>
           ))}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + links.length * 0.08 }}
-          >
-            <Link
-              to="/festivaler"
-              className={`text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${
-                location.pathname === "/festivaler"
-                  ? "text-primary"
-                  : "text-foreground hover:text-primary"
-              }`}
+
+          {pageLinks.map((pageLink, i) => (
+            <motion.div
+              key={pageLink.to}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + (links.length + i) * 0.08 }}
             >
-              Festivaler
-            </Link>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + (links.length + 1) * 0.08 }}
-          >
-            <Link
-              to="/blog"
-              className={`text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${
-                location.pathname.startsWith("/blog")
-                  ? "text-primary"
-                  : "text-foreground hover:text-primary"
-              }`}
-            >
-              Blog
-            </Link>
-          </motion.div>
+              <Link
+                to={pageLink.to}
+                className={`text-sm font-medium transition-colors relative pb-0.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:transition-all after:duration-300 ${
+                  isActivePage(pageLink.to)
+                    ? "text-primary after:bg-primary after:scale-x-100"
+                    : "text-foreground hover:text-primary after:bg-primary after:scale-x-0 after:origin-right hover:after:scale-x-100 hover:after:origin-left"
+                }`}
+              >
+                {pageLink.label}
+              </Link>
+            </motion.div>
+          ))}
+
           <motion.a
             href="#booking"
             onClick={(e) => handleAnchorClick(e, "#booking")}
@@ -117,69 +127,61 @@ const Navbar = () => {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden bg-background border-b border-border px-6 pb-6 space-y-4 overflow-hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="md:hidden bg-background/98 backdrop-blur-xl border-b border-border px-6 pb-6 overflow-hidden"
           >
-            {links.map((l, i) => (
+            <div className="pt-4 space-y-1">
+              {links.map((l, i) => (
+                <motion.a
+                  key={l.href}
+                  href={l.href}
+                  onClick={(e) => handleAnchorClick(e, l.href)}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className="block py-2 text-muted-foreground hover:text-foreground transition-colors font-medium"
+                >
+                  {l.label}
+                </motion.a>
+              ))}
+
+              {pageLinks.map((pageLink, i) => (
+                <motion.div
+                  key={pageLink.to}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (links.length + i) * 0.04 }}
+                >
+                  <Link
+                    to={pageLink.to}
+                    onClick={() => setOpen(false)}
+                    className={`block py-2 font-medium transition-colors ${
+                      isActivePage(pageLink.to)
+                        ? "text-primary"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {pageLink.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="border-t border-border mt-4 pt-4">
               <motion.a
-                key={l.href}
-                href={l.href}
-                onClick={(e) => handleAnchorClick(e, l.href)}
-                initial={{ opacity: 0, x: -20 }}
+                href="#booking"
+                onClick={(e) => handleAnchorClick(e, "#booking")}
+                initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="block text-muted-foreground hover:text-foreground transition-colors font-medium"
+                transition={{ delay: 0.22 }}
+                className="block text-center px-5 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold hover:opacity-90 transition"
               >
-                {l.label}
+                Book nu
               </motion.a>
-            ))}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: links.length * 0.05 }}
-            >
-              <Link
-                to="/festivaler"
-                onClick={() => setOpen(false)}
-                className={`block font-medium transition-colors ${
-                  location.pathname === "/festivaler"
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Festivaler
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: (links.length + 1) * 0.05 }}
-            >
-              <Link
-                to="/blog"
-                onClick={() => setOpen(false)}
-                className={`block font-medium transition-colors ${
-                  location.pathname.startsWith("/blog")
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Blog
-              </Link>
-            </motion.div>
-            <motion.a
-              href="#booking"
-              onClick={(e) => handleAnchorClick(e, "#booking")}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="block text-center px-5 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-semibold hover:opacity-90 transition"
-            >
-              Book nu
-            </motion.a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

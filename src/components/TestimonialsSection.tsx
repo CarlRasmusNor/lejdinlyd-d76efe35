@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
@@ -29,9 +29,9 @@ const testimonials = [
 ];
 
 const Stars = () => (
-  <div className="flex gap-0.5 mb-3">
+  <div className="flex gap-1 mb-4">
     {[...Array(5)].map((_, i) => (
-      <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+      <Star key={i} className="w-5 h-5 fill-primary text-primary" />
     ))}
   </div>
 );
@@ -51,7 +51,7 @@ const TestimonialsSection = () => {
             Hvad kunderne siger
           </p>
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-            Tilfredse kunder i <span className="text-primary">Aalborg</span>
+            Det siger vores <span className="text-primary">kunder</span>
           </h2>
           <p className="text-muted-foreground text-lg">
             Hundredvis af fester i Aalborg og omegn – her er hvad nogle af vores kunder siger.
@@ -66,10 +66,14 @@ const TestimonialsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="rounded-2xl border border-border bg-card p-7 flex flex-col gap-3 hover:border-primary/20 transition-colors"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="rounded-2xl border border-border bg-card p-7 flex flex-col gap-3 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
             >
-              <Stars />
-              <p className="text-foreground leading-relaxed">"{t.text}"</p>
+              <div className="flex items-start justify-between gap-2">
+                <Stars />
+                <Quote className="w-8 h-8 text-primary/20 flex-shrink-0 -mt-1" />
+              </div>
+              <p className="text-foreground leading-relaxed flex-1">{t.text}</p>
               <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
                 <div>
                   <p className="font-heading font-semibold text-sm text-foreground">{t.name}</p>

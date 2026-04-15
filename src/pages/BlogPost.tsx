@@ -17,7 +17,6 @@ const BlogPost = () => {
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.setAttribute("content", post.metaDescription);
     }
-    window.scrollTo(0, 0);
   }, [post]);
 
   if (!post) return <Navigate to="/blog" replace />;

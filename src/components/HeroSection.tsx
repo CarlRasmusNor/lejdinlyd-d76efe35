@@ -8,22 +8,22 @@ const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ be
 
 // Orbit ring configs: [size in rem, border style, border opacity]
 const ORBIT_RINGS = [
-  { size: 18, solid: false, opacity: 0.2, speed: 12 },
-  { size: 22, solid: false, opacity: 0.12, speed: -18 },
-  { size: 26, solid: true,  opacity: 0.08, speed: 24 },
-  { size: 30, solid: false, opacity: 0.05, speed: -30 },
+  { size: 18, solid: false, opacity: 0.2, speed: 8 },
+  { size: 22, solid: false, opacity: 0.12, speed: -12 },
+  { size: 26, solid: true,  opacity: 0.08, speed: 16 },
+  { size: 30, solid: false, opacity: 0.05, speed: -22 },
 ];
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const springX = useSpring(mx, { stiffness: 40, damping: 18 });
-  const springY = useSpring(my, { stiffness: 40, damping: 18 });
+  const springX = useSpring(mx, { stiffness: 55, damping: 14 });
+  const springY = useSpring(my, { stiffness: 55, damping: 14 });
   const rotateX = useTransform(springY, [-0.5, 0.5], [8, -8]);
   const rotateY = useTransform(springX, [-0.5, 0.5], [-10, 10]);
-  const translateX = useTransform(springX, [-0.5, 0.5], [-16, 16]);
-  const translateY = useTransform(springY, [-0.5, 0.5], [-12, 12]);
+  const translateX = useTransform(springX, [-0.5, 0.5], [-26, 26]);
+  const translateY = useTransform(springY, [-0.5, 0.5], [-20, 20]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -58,12 +58,12 @@ const HeroSection = () => {
       <motion.div
         className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/10 blur-[120px] pointer-events-none"
         animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
         className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-primary/8 blur-[100px] pointer-events-none"
         animate={{ scale: [1, 1.12, 1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
       />
 
       {/* Content */}
@@ -158,7 +158,7 @@ const HeroSection = () => {
           <motion.div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
             animate={{ scale: [1, 1.15, 1] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
           >
             <div className="w-64 h-64 md:w-72 md:h-72 rounded-full bg-primary/20 blur-[80px]" />
           </motion.div>
@@ -192,8 +192,8 @@ const HeroSection = () => {
             alt="Soundboks Go"
             className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_80px_hsl(24_95%_53%/0.35)] relative z-10"
             style={{ x: translateX, y: translateY, rotateX, rotateY }}
-            animate={{ y: [0, -18, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ y: [0, -38, 6, -30, 0], scale: [1, 1.05, 0.97, 1.03, 1], rotate: [0, 2.5, -1, 1.5, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
       </div>

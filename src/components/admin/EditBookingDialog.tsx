@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, eachDayOfInterval, getDay } from "date-fns";
 import { da } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
@@ -25,14 +26,38 @@ export interface Booking {
   status: string;
 }
 
+type BookingStatus = "pending" | "confirmed" | "rejected";
+
 interface EditBookingDialogProps {
   booking: Booking | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSaved: (updated: Booking) => void;
+  onSaved?: (updated: Booking) => void;
+  onUpdated?: () => void;
+  mode?: "create" | "edit";
+  onCreated?: () => void;
 }
 
-const EditBookingDialog = ({ booking, open, onOpenChange, onSaved }: EditBookingDialogProps) => {
+function calcPrice(dateRange: DateRange | undefined, speakerCount: number): number {
+  if (!dateRange?.from) return 0;
+  const to = dateRange.to ?? dateRange.from;
+  const days = eachDayOfInterval({ start: dateRange.from, end: to });
+  const base = days.reduce((sum, d) => {
+    const day = getDay(d);
+    return sum + (day === 5 || day === 6 ? 300 : 150);
+  }, 0);
+  return base * speakerCount;
+}
+
+const EditBookingDialog = ({
+  booking,
+  open,
+  onOpenChange,
+  onSaved,
+  onUpdated,
+  mode = "edit",
+  onCreated,
+}: EditBookingDialogProps) => {
   const [saving, setSaving] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [speakerCount, setSpeakerCount] = useState(1);
@@ -40,14 +65,25 @@ const EditBookingDialog = ({ booking, open, onOpenChange, onSaved }: EditBooking
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [status, setStatus] = useState<BookingStatus>("pending");
 
-  // Sync state when booking changes
+  const resetToEmpty = () => {
+    setName("");
+    setEmail("");
+    setPhone("");
+    setSpeakerCount(1);
+    setTotalPrice(0);
+    setDateRange(undefined);
+    setStatus("pending");
+  };
+
   const initFromBooking = (b: Booking) => {
     setName(b.name);
     setEmail(b.email);
     setPhone(b.phone);
     setSpeakerCount(b.speaker_count);
     setTotalPrice(b.total_price);
+    setStatus((b.status as BookingStatus) ?? "pending");
     setDateRange({
       from: parseISO(b.date_from),
       to: b.date_to ? parseISO(b.date_to) : undefined,
@@ -55,22 +91,93 @@ const EditBookingDialog = ({ booking, open, onOpenChange, onSaved }: EditBooking
   };
 
   useEffect(() => {
-    if (booking && open) initFromBooking(booking);
-  }, [booking, open]);
+    if (!open) return;
+    if (mode === "create") {
+      resetToEmpty();
+    } else if (booking) {
+      initFromBooking(booking);
+    }
+  }, [booking, open, mode]);
 
-  if (!booking) return null;
+  // Auto-calculate price in create mode when dateRange or speakerCount changes
+  useEffect(() => {
+    if (mode === "create") {
+      setTotalPrice(calcPrice(dateRange, speakerCount));
+    }
+  }, [dateRange, speakerCount, mode]);
+
+  if (mode === "edit" && !booking) return null;
+
+  const isCreate = mode === "create";
+
+  const handleSave = async () => {
+    if (!dateRange?.from) return;
+    setSaving(true);
+
+    const dateFrom = format(dateRange.from, "yyyy-MM-dd");
+    const dateTo = dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null;
+
+    if (isCreate) {
+      const { error } = await supabase.from("bookings").insert([
+        {
+          name,
+          email,
+          phone,
+          speaker_count: speakerCount,
+          total_price: totalPrice,
+          date_from: dateFrom,
+          date_to: dateTo,
+          status,
+          message: "",
+        },
+      ] as any);
+      setSaving(false);
+      if (error) {
+        toast.error("Kunne ikke oprette booking");
+        return;
+      }
+      toast.success("Booking oprettet");
+      onCreated?.();
+      onOpenChange(false);
+    } else {
+      const updates = {
+        name,
+        email,
+        phone,
+        speaker_count: speakerCount,
+        total_price: totalPrice,
+        date_from: dateFrom,
+        date_to: dateTo,
+        status,
+      };
+      const { error } = await supabase
+        .from("bookings")
+        .update(updates as any)
+        .eq("id", booking!.id);
+      setSaving(false);
+      if (error) {
+        toast.error("Kunne ikke gemme ændringer");
+        return;
+      }
+      onSaved?.({ ...booking!, ...updates });
+      onUpdated?.();
+      onOpenChange(false);
+      toast.success("Booking opdateret");
+    }
+  };
 
   return (
     <Dialog
       open={open}
       onOpenChange={(v) => {
-        if (v && booking) initFromBooking(booking);
+        if (v && mode === "edit" && booking) initFromBooking(booking);
+        if (v && mode === "create") resetToEmpty();
         onOpenChange(v);
       }}
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Rediger booking</DialogTitle>
+          <DialogTitle>{isCreate ? "Opret booking" : "Rediger booking"}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
@@ -157,41 +264,28 @@ const EditBookingDialog = ({ booking, open, onOpenChange, onSaved }: EditBooking
               />
             </div>
           </div>
+
+          <div>
+            <label className="text-xs font-medium text-muted-foreground">Status</label>
+            <Select value={status} onValueChange={(v) => setStatus(v as BookingStatus)}>
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Afventer</SelectItem>
+                <SelectItem value="confirmed">Bekræftet</SelectItem>
+                <SelectItem value="rejected">Afvist</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Annuller
           </Button>
-          <Button
-            disabled={saving}
-            onClick={async () => {
-              if (!dateRange?.from) return;
-              setSaving(true);
-              const updates = {
-                name,
-                email,
-                phone,
-                speaker_count: speakerCount,
-                total_price: totalPrice,
-                date_from: format(dateRange.from, "yyyy-MM-dd"),
-                date_to: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : null,
-              };
-              const { error } = await supabase
-                .from("bookings")
-                .update(updates as any)
-                .eq("id", booking.id);
-              setSaving(false);
-              if (error) {
-                toast.error("Kunne ikke gemme ændringer");
-                return;
-              }
-              onSaved({ ...booking, ...updates });
-              onOpenChange(false);
-              toast.success("Booking opdateret");
-            }}
-          >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Gem"}
+          <Button disabled={saving} onClick={handleSave}>
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : isCreate ? "Opret" : "Gem"}
           </Button>
         </DialogFooter>
       </DialogContent>

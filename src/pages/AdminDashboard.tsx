@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parseISO, eachDayOfInterval } from "date-fns";
 import { da } from "date-fns/locale";
-import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper, XCircle, Search, X } from "lucide-react";
+import { LogOut, CalendarDays, Users, DollarSign, Loader2, CheckCircle, Clock, Sun, PartyPopper, XCircle, Search, X, ChevronUp, ChevronDown, Plus } from "lucide-react";
 import { toast } from "sonner";
 import BookingStatusBadge from "@/components/admin/BookingStatusBadge";
 import BookingActions from "@/components/admin/BookingActions";
@@ -17,6 +17,7 @@ const AdminDashboard = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const [editBooking, setEditBooking] = useState<Booking | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [sendingEmail, setSendingEmail] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -32,16 +33,17 @@ const AdminDashboard = () => {
     checkAuth();
   }, [navigate]);
 
+  const fetchBookings = async () => {
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setBookings(data as unknown as Booking[]);
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (!authChecked) return;
-    const fetchBookings = async () => {
-      const { data, error } = await supabase
-        .from("bookings")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (!error && data) setBookings(data as unknown as Booking[]);
-      setLoading(false);
-    };
     fetchBookings();
   }, [authChecked]);
 
@@ -219,6 +221,7 @@ const AdminDashboard = () => {
             onSendReview={handleSendReview}
             sendingEmail={sendingEmail}
             showFilters
+            onAddBooking={() => setShowCreateDialog(true)}
           />
         ) : null}
 
@@ -229,6 +232,15 @@ const AdminDashboard = () => {
           onSaved={(updated) => {
             setBookings((prev) => prev.map((b) => b.id === updated.id ? updated : b));
           }}
+        />
+
+        <EditBookingDialog
+          booking={null}
+          open={showCreateDialog}
+          onOpenChange={setShowCreateDialog}
+          mode="create"
+          onCreated={() => { setShowCreateDialog(false); fetchBookings(); }}
+          onUpdated={() => {}}
         />
       </main>
     </div>
@@ -263,6 +275,7 @@ const BookingsTable = ({
   onSendReview,
   sendingEmail,
   showFilters = false,
+  onAddBooking,
 }: {
   title: string;
   bookings: Booking[];
@@ -274,11 +287,30 @@ const BookingsTable = ({
   onSendReview: (booking: Booking) => void;
   sendingEmail: string | null;
   showFilters?: boolean;
+  onAddBooking?: () => void;
 }) => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [sortField, setSortField] = useState<"date_from" | "name" | "total_price" | "created_at">("created_at");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  const toggleSort = (field: typeof sortField) => {
+    if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortField(field); setSortDir("asc"); }
+  };
+
+  const SortBtn = ({ field, children }: { field: typeof sortField; children: React.ReactNode }) => {
+    const active = sortField === field;
+    const Icon = active && sortDir === "asc" ? ChevronUp : ChevronDown;
+    return (
+      <button onClick={() => toggleSort(field)} className="inline-flex items-center gap-1 hover:text-primary transition-colors cursor-pointer">
+        {children}
+        <Icon className={`h-3.5 w-3.5${active ? "" : " text-muted-foreground/40"}`} />
+      </button>
+    );
+  };
 
   const filtered = useMemo(() => {
     return bookings.filter((b) => {
@@ -294,8 +326,21 @@ const BookingsTable = ({
       if (dateFrom && b.date_from < dateFrom) return false;
       if (dateTo && b.date_from > dateTo) return false;
       return true;
+    }).sort((a, b) => {
+      let aVal: string | number = a[sortField] ?? "";
+      let bVal: string | number = b[sortField] ?? "";
+      if (sortField === "date_from") {
+        aVal = new Date(a.date_from).getTime();
+        bVal = new Date(b.date_from).getTime();
+      } else if (sortField === "total_price") {
+        aVal = Number(a.total_price) || 0;
+        bVal = Number(b.total_price) || 0;
+      }
+      if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+      return 0;
     });
-  }, [bookings, search, statusFilter, dateFrom, dateTo]);
+  }, [bookings, search, statusFilter, dateFrom, dateTo, sortField, sortDir]);
 
   const hasActiveFilters = search || statusFilter !== "all" || dateFrom || dateTo;
 
@@ -310,14 +355,25 @@ const BookingsTable = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="font-heading font-bold text-lg">{title}</h2>
-        {showFilters && hasActiveFilters && (
-          <button
-            onClick={clearFilters}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="w-3.5 h-3.5" /> Ryd filtre
-          </button>
-        )}
+        <div className="flex items-center gap-3">
+          {onAddBooking && (
+            <button
+              onClick={onAddBooking}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 transition"
+            >
+              <Plus className="h-4 w-4" />
+              Tilføj booking
+            </button>
+          )}
+          {showFilters && hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-3.5 h-3.5" /> Ryd filtre
+            </button>
+          )}
+        </div>
       </div>
 
       {showFilters && (
@@ -370,12 +426,27 @@ const BookingsTable = ({
           <thead>
             <tr className="border-b border-border bg-secondary/50">
               <th className="text-left px-4 py-3 font-heading font-semibold">Status</th>
-              <th className="text-left px-4 py-3 font-heading font-semibold">Dato</th>
-              <th className="text-left px-4 py-3 font-heading font-semibold">Navn</th>
+              <th className="text-left px-4 py-3 font-heading font-semibold">
+                <button onClick={() => toggleSort("date_from")} className="inline-flex items-center gap-1 hover:text-primary transition-colors cursor-pointer">
+                  Dato
+                  {sortField === "date_from" ? (sortDir === "asc" ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />) : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/40" />}
+                </button>
+              </th>
+              <th className="text-left px-4 py-3 font-heading font-semibold">
+                <button onClick={() => toggleSort("name")} className="inline-flex items-center gap-1 hover:text-primary transition-colors cursor-pointer">
+                  Navn
+                  {sortField === "name" ? (sortDir === "asc" ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />) : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/40" />}
+                </button>
+              </th>
               <th className="text-left px-4 py-3 font-heading font-semibold hidden sm:table-cell">Email</th>
               <th className="text-left px-4 py-3 font-heading font-semibold hidden md:table-cell">Telefon</th>
               <th className="text-center px-4 py-3 font-heading font-semibold">Stk</th>
-              <th className="text-right px-4 py-3 font-heading font-semibold">Pris</th>
+              <th className="text-right px-4 py-3 font-heading font-semibold">
+                <button onClick={() => toggleSort("total_price")} className="inline-flex items-center gap-1 hover:text-primary transition-colors cursor-pointer ml-auto">
+                  Pris
+                  {sortField === "total_price" ? (sortDir === "asc" ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />) : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/40" />}
+                </button>
+              </th>
               <th className="text-right px-4 py-3 font-heading font-semibold">Handlinger</th>
             </tr>
           </thead>

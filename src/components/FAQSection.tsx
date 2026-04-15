@@ -28,6 +28,9 @@ const FAQSection = () => {
           <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
             Ofte stillede <span className="text-primary">spørgsmål</span>
           </h2>
+          <p className="text-muted-foreground text-lg">
+            Vi har samlet svar på de mest stillede spørgsmål
+          </p>
         </motion.div>
 
         <motion.div
@@ -47,18 +50,37 @@ const FAQSection = () => {
               >
                 <AccordionItem
                   value={`item-${i}`}
-                  className="rounded-xl border border-border bg-card px-6 hover:border-primary/20 transition-colors"
+                  className="rounded-xl border border-border bg-card px-6 hover:bg-primary/5 hover:border-primary/30 transition-colors"
                 >
-                  <AccordionTrigger className="font-heading font-semibold text-left hover:no-underline">
+                  <AccordionTrigger className="font-heading font-semibold text-left hover:no-underline py-5 text-base md:text-lg [&[data-state=open]>svg]:rotate-180">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5 text-base">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
               </motion.div>
             ))}
           </Accordion>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+          className="mt-10 text-center"
+        >
+          <a
+            href="#kontakt"
+            onClick={(e) => {
+              e.preventDefault();
+              document.querySelector("#kontakt")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-2 text-primary font-semibold hover:underline underline-offset-4 transition-all"
+          >
+            Har du et spørgsmål vi ikke har besvaret? Kontakt os →
+          </a>
         </motion.div>
       </div>
     </section>

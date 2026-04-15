@@ -21,39 +21,66 @@ const DeliverySection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8">
+          {/* Delivery card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl border border-border bg-card p-8"
+            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+            className="rounded-2xl border border-border bg-card p-8 flex flex-col gap-4"
           >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
               <Truck className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-heading text-xl font-bold mb-3">Levering i Aalborg &amp; omegn</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Bor du i Aalborg eller nærområdet? Så kan vi levere din Soundboks Go direkte til din adresse. 
-              Kontakt os for at aftale levering – det er nemt og fleksibelt.
-            </p>
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <h3 className="font-heading text-xl font-bold">Levering i Aalborg &amp; omegn</h3>
+                <span className="inline-block bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
+                  Gratis
+                </span>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Bor du i Aalborg eller nærområdet? Vi leverer din Soundboks Go direkte til din adresse –{" "}
+                <span className="text-foreground font-medium">helt gratis</span>. Kontakt os for at aftale
+                levering. Det er nemt og fleksibelt.
+              </p>
+            </div>
+            <button
+              onClick={() => document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" })}
+              className="mt-auto w-full rounded-xl bg-primary text-primary-foreground font-heading font-semibold py-3 hover:opacity-90 transition-opacity"
+            >
+              Book nu
+            </button>
           </motion.div>
 
+          {/* Pickup card */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="rounded-2xl border border-border bg-card p-8"
+            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+            className="rounded-2xl border border-border bg-card p-8 flex flex-col gap-4"
           >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
               <MapPin className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-heading text-xl font-bold mb-3">Afhentning uden for området</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Bor du uden for Aalborg og nærområdet? Ingen problem – du kan afhente højttaleren på vores adresse: 
-              <strong className="text-foreground"> Kjellerupsgade 4, 9000 Aalborg</strong>. 
-              Vi aftaler et tidspunkt der passer dig.
-            </p>
+            <div>
+              <h3 className="font-heading text-xl font-bold mb-3">Afhentning uden for området</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Bor du uden for Aalborg og nærområdet? Ingen problem – du kan afhente højttaleren på vores
+                adresse:{" "}
+                <span className="text-foreground font-medium">Kjellerupsgade 4, 9000 Aalborg</span>. Vi
+                aftaler et tidspunkt der passer dig.
+              </p>
+            </div>
+            <button
+              onClick={() => document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" })}
+              className="mt-auto w-full rounded-xl border border-primary text-primary font-heading font-semibold py-3 hover:bg-primary/10 transition-colors"
+            >
+              Book nu
+            </button>
           </motion.div>
         </div>
       </div>

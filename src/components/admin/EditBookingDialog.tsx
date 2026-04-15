@@ -133,7 +133,7 @@ const EditBookingDialog = ({
       ] as any);
       setSaving(false);
       if (error) {
-        toast.error("Kunne ikke oprette booking");
+        toast.error(`Kunne ikke oprette booking: ${error.message}`);
         return;
       }
       toast.success("Booking oprettet");

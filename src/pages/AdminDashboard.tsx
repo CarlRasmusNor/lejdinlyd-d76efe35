@@ -464,8 +464,8 @@ const BookingsTable = ({
                     <BookingStatusBadge status={b.status} />
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    {format(parseISO(b.date_from), "d. MMM", { locale: da })}
-                    {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM", { locale: da })}`}
+                    {format(parseISO(b.date_from), "d. MMM yyyy", { locale: da })}
+                    {b.date_to && b.date_to !== b.date_from && ` – ${format(parseISO(b.date_to), "d. MMM yyyy", { locale: da })}`}
                   </td>
                   <td className="px-4 py-3 font-medium">{b.name}</td>
                   <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{b.email}</td>

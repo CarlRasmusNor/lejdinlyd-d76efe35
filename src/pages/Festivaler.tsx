@@ -125,7 +125,7 @@ const included = [
   "Soundboks Go højtaler",
   "Oplader medfølger",
   "Bluetooth 5.0 – op til 121 dB",
-  "Op til 10 timers batteritid",
+  "Op til 40 timers batteritid",
   "Intet depositum",
   "Betaling ved overlevering",
 ];

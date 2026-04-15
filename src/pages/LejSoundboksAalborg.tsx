@@ -38,7 +38,7 @@ const faqs = [
 
 const features = [
   { icon: Volume2, title: "Op til 121 dB", desc: "Kraftig lyd der fylder hele festen – indendørs og udendørs i Aalborg" },
-  { icon: Battery, title: "10 timers batteri", desc: "Spiller hele aftenen uden opladning" },
+  { icon: Battery, title: "40 timers batteri", desc: "Spiller hele aftenen uden opladning" },
   { icon: Bluetooth, title: "Bluetooth forbindelse", desc: "Forbind din telefon på sekunder" },
   { icon: PartyPopper, title: "Perfekt til fest", desc: "Ideel til fester, events og sammenkomster i Aalborg" },
 ];
@@ -147,7 +147,7 @@ const LejSoundboksAalborg = () => {
             </p>
             <p>
               Soundboks Go er bygget til at levere kraftig, klar lyd med op til 121 dB – nok til at fylde en stor have, et festlokale eller et udendørs arrangement. 
-              Med Bluetooth-forbindelse og op til 10 timers batteritid slipper du for ledninger og strømbekymringer. Du forbinder simpelthen din telefon og trykker play.
+              Med Bluetooth-forbindelse og op til 40 timers batteritid slipper du for ledninger og strømbekymringer. Du forbinder simpelthen din telefon og trykker play.
             </p>
             <p>
               Vi gør det nemt at leje en højtaler i Aalborg. Book via vores formular, og vi bekræfter din reservation hurtigt. 

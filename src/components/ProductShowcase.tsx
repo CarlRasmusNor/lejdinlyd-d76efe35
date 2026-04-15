@@ -63,7 +63,7 @@ const ProductShowcase = () => {
           </p>
         </motion.div>
 
-        {/* Feature pills */}
+        {/* Feature pills — polished with larger size, better spacing and subtle shadow */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -78,17 +78,17 @@ const ProductShowcase = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
-              className="flex items-center gap-2.5 rounded-full border border-border bg-card px-5 py-2.5"
+              className="flex items-center gap-3 rounded-full border border-border bg-card px-6 py-3 shadow-md shadow-black/20"
             >
-              <f.icon className="w-4 h-4 text-primary" />
-              <span className="text-foreground text-sm font-medium">{f.label}</span>
-              <span className="text-muted-foreground text-xs">· {f.desc}</span>
+              <f.icon className="w-5 h-5 text-primary flex-shrink-0" />
+              <span className="text-foreground text-sm font-semibold">{f.label}</span>
+              <span className="text-muted-foreground text-sm">· {f.desc}</span>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Product images – large center, smaller sides */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
+        {/* Product images — responsive grid that degrades gracefully at md */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {images.map((img, i) => {
             const isCenter = i === 1;
             return (
@@ -104,7 +104,9 @@ const ProductShowcase = () => {
                   }}
                   whileHover={{ y: -10, transition: { duration: 0.3 } }}
                   className={`flex items-center justify-center rounded-2xl border border-border bg-card group cursor-pointer hover:border-primary/30 transition-colors ${
-                    isCenter ? "p-10 sm:-my-4 sm:scale-105 z-10" : "p-8"
+                    isCenter
+                      ? "p-10 md:-my-4 md:scale-105 z-10"
+                      : "p-8"
                   }`}
                 >
                   <motion.img
@@ -132,7 +134,7 @@ const ProductShowcase = () => {
           })}
         </div>
 
-        {/* Scroll-down arrow into pricing */}
+        {/* Scroll-down CTA — more visually prominent with label and arrow */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -143,13 +145,26 @@ const ProductShowcase = () => {
           <motion.a
             href="#priser"
             onClick={(e) => { e.preventDefault(); scrollTo("#priser"); }}
-            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <span className="text-sm font-heading tracking-wide">Se priser</span>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="stroke-current">
-              <path d="M5 8L10 13L15 8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <span className="text-base font-heading font-semibold tracking-wide group-hover:text-primary transition-colors">
+              Se priser
+            </span>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="stroke-current"
+            >
+              <path
+                d="M6 9L12 15L18 9"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </motion.a>
         </motion.div>

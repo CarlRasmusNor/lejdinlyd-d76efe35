@@ -19,8 +19,10 @@ const HeroSection = () => {
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-background/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        {/* Smooth gradient: dark bottom fading to slightly less dark top */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
+        {/* Additional dark tint for text readability */}
+        <div className="absolute inset-0 bg-background/30" />
       </motion.div>
 
       {/* Ambient glow orbs */}
@@ -39,32 +41,43 @@ const HeroSection = () => {
 
       <div className="relative z-10 container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12 pt-20">
         <div className="flex-1 text-center lg:text-left">
-          <motion.p
+          {/* Accent badge above headline */}
+          <motion.div
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.6 }}
-            className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-6"
+            className="inline-flex items-center gap-3 mb-6"
           >
-            Soundboks udlejning i Aalborg
-          </motion.p>
+            {/* Colored accent line */}
+            <span className="block w-8 h-0.5 bg-primary rounded-full" />
+            <p className="text-primary font-heading font-medium tracking-widest uppercase text-sm">
+              Soundboks udlejning i Aalborg
+            </p>
+          </motion.div>
+
+          {/* Main headline — visually dominant */}
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-2xl mb-6"
+            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-2xl mb-6"
           >
             Lej en Soundboks Go
             <br />
             <span className="text-primary">i Aalborg &amp; omegn</span>
           </motion.h1>
+
+          {/* Supporting copy with improved readability */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="text-muted-foreground text-lg md:text-xl max-w-xl mb-10 lg:mx-0 mx-auto"
+            className="text-muted-foreground text-lg md:text-xl max-w-xl mb-10 lg:mx-0 mx-auto leading-relaxed"
           >
             Billig højtaler udlejning fra 150 kr/dag – perfekt til fest, events og forsamlinger i Aalborg
           </motion.p>
+
+          {/* CTAs: stacked full-width on mobile, side-by-side on sm+ */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -74,14 +87,14 @@ const HeroSection = () => {
             <a
               href="#booking"
               onClick={(e) => { e.preventDefault(); document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all animate-glow-pulse active:scale-95"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all animate-glow-pulse active:scale-95"
             >
               Book nu
             </a>
             <a
               href="#priser"
               onClick={(e) => { e.preventDefault(); document.querySelector("#priser")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="inline-flex items-center justify-center px-8 py-4 rounded-lg border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all active:scale-95"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-lg border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all active:scale-95"
             >
               Se priser
             </a>

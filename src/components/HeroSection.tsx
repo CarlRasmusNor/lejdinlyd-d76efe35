@@ -1,254 +1,218 @@
-import { motion } from "framer-motion";
-import { ArrowRight, MapPin, ShieldCheck, Zap } from "lucide-react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 import soundboksFront from "@/assets/soundboks-front.png";
 
-// Precomputed EQ bar values — prevents re-render flicker from Math.random()
-const EQ_BARS = [
-  { dur: 0.75, delay: 0.00, min: 0.08, max: 0.55 },
-  { dur: 0.60, delay: 0.04, min: 0.18, max: 0.88 },
-  { dur: 0.90, delay: 0.08, min: 0.12, max: 0.48 },
-  { dur: 0.65, delay: 0.12, min: 0.28, max: 0.82 },
-  { dur: 0.80, delay: 0.16, min: 0.08, max: 0.68 },
-  { dur: 0.55, delay: 0.20, min: 0.22, max: 0.94 },
-  { dur: 0.70, delay: 0.24, min: 0.16, max: 0.58 },
-  { dur: 0.85, delay: 0.28, min: 0.10, max: 0.76 },
-  { dur: 0.62, delay: 0.32, min: 0.30, max: 0.72 },
-  { dur: 0.78, delay: 0.36, min: 0.08, max: 0.50 },
-  { dur: 0.92, delay: 0.40, min: 0.20, max: 0.90 },
-  { dur: 0.67, delay: 0.44, min: 0.14, max: 0.62 },
-  { dur: 0.83, delay: 0.48, min: 0.24, max: 0.84 },
-  { dur: 0.57, delay: 0.52, min: 0.32, max: 0.68 },
-  { dur: 0.72, delay: 0.56, min: 0.10, max: 0.92 },
-  { dur: 0.88, delay: 0.60, min: 0.18, max: 0.54 },
-  { dur: 0.63, delay: 0.64, min: 0.12, max: 0.78 },
-  { dur: 0.76, delay: 0.68, min: 0.28, max: 0.58 },
-  { dur: 0.91, delay: 0.72, min: 0.08, max: 0.74 },
-  { dur: 0.66, delay: 0.76, min: 0.20, max: 0.96 },
-  { dur: 0.81, delay: 0.80, min: 0.14, max: 0.60 },
-  { dur: 0.58, delay: 0.84, min: 0.26, max: 0.86 },
-  { dur: 0.74, delay: 0.88, min: 0.10, max: 0.66 },
-  { dur: 0.89, delay: 0.92, min: 0.22, max: 0.44 },
-];
-
-const trustPoints = [
-  { icon: Zap, label: "Fra 150 kr/dag" },
-  { icon: ShieldCheck, label: "Ingen depositum" },
-  { icon: MapPin, label: "Levering i Aalborg" },
-];
-
 const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
+// Orbit ring configs: [size in rem, border style, border opacity]
+const ORBIT_RINGS = [
+  { size: 18, solid: false, opacity: 0.2, speed: 12 },
+  { size: 22, solid: false, opacity: 0.12, speed: -18 },
+  { size: 26, solid: true,  opacity: 0.08, speed: 24 },
+  { size: 30, solid: false, opacity: 0.05, speed: -30 },
+];
+
 const HeroSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const springX = useSpring(mx, { stiffness: 40, damping: 18 });
+  const springY = useSpring(my, { stiffness: 40, damping: 18 });
+  const rotateX = useTransform(springY, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-10, 10]);
+  const translateX = useTransform(springX, [-0.5, 0.5], [-16, 16]);
+  const translateY = useTransform(springY, [-0.5, 0.5], [-12, 12]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      mx.set((e.clientX - rect.left) / rect.width - 0.5);
+      my.set((e.clientY - rect.top) / rect.height - 0.5);
+    };
+    const onLeave = () => { mx.set(0); my.set(0); };
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+    return () => { el.removeEventListener("mousemove", onMove); el.removeEventListener("mouseleave", onLeave); };
+  }, [mx, my]);
+
   return (
-    <section className="relative isolate flex min-h-svh items-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
           src={heroBg}
-          alt=""
-          className="h-full w-full object-cover"
-          style={{ opacity: 0.10 }}
+          alt="Hyggeligt udendørs arrangement"
+          className="w-full h-full object-cover"
+          width={1920}
+          height={1080}
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(135deg, hsl(220 30% 7%) 35%, hsl(220 30% 7% / 0.82) 100%)",
-          }}
-        />
+        <div className="absolute inset-0 bg-background/75" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
       </div>
 
-      {/* Ambient glow orbs */}
-      <div
-        className="pointer-events-none absolute -top-48 -left-24 rounded-full bg-primary/18 blur-[180px]"
-        style={{ width: "44rem", height: "44rem" }}
+      {/* Glow orbs */}
+      <motion.div
+        className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/10 blur-[120px] pointer-events-none"
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div
-        className="pointer-events-none absolute top-1/2 -right-32 -translate-y-1/2 rounded-full bg-primary/10 blur-[160px]"
-        style={{ width: "32rem", height: "32rem" }}
+      <motion.div
+        className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-primary/8 blur-[100px] pointer-events-none"
+        animate={{ scale: [1, 1.12, 1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
       />
-
-      {/* Animated equalizer bars — decorative bottom accent */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 flex items-end gap-[2.5px] px-6 md:px-12"
-        style={{ height: "6.5rem" }}
-      >
-        {EQ_BARS.map((bar, i) => (
-          <motion.div
-            key={i}
-            className="flex-1 rounded-t-sm bg-primary"
-            animate={{ scaleY: [bar.min, bar.max, bar.min] }}
-            transition={{
-              duration: bar.dur,
-              delay: bar.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            style={{ transformOrigin: "bottom", opacity: 0.22 }}
-          />
-        ))}
-      </div>
-
-      {/* Subtle horizontal rule */}
-      <div className="pointer-events-none absolute left-0 right-0 top-[42%] h-px bg-gradient-to-r from-transparent via-white/[0.035] to-transparent" />
 
       {/* Content */}
-      <div className="relative mx-auto w-full max-w-7xl px-6 pb-32 pt-32 md:pb-40 md:pt-44">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-16">
-
-          {/* ── Left column ── */}
-          <div>
-            <motion.span
-              className="eyebrow"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.05 }}
-            >
-              Soundboks udlejning · Aalborg
-            </motion.span>
-
-            <motion.h1
-              className="mt-5 font-heading font-extrabold leading-[0.9] tracking-[-0.04em] text-foreground"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-              style={{ fontSize: "clamp(3.4rem, 7.5vw, 6.2rem)" }}
-            >
-              <span className="block">Lej en</span>
-              <span className="block text-primary drop-shadow-[0_0_48px_hsl(24_95%_56%_/_0.45)]">
-                Soundboks
-              </span>
-              <span className="block text-foreground/85">til din fest</span>
-            </motion.h1>
-
-            <motion.p
-              className="mt-7 max-w-[30rem] text-lg leading-8 text-muted-foreground"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.55, delay: 0.32 }}
-            >
-              Fra 150 kr/dag. Hurtig booking, gratis levering i Aalborg og ingen depositum — en proces der er lige så nem som den burde være.
-            </motion.p>
-
-            {/* CTA buttons */}
-            <motion.div
-              className="mt-8 flex flex-col gap-3 sm:flex-row"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.44 }}
-            >
-              <a
-                href="#booking"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo("#booking");
-                }}
-                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-primary px-9 py-4 font-heading text-base font-semibold text-primary-foreground transition-all hover:scale-[1.03] hover:shadow-[0_0_36px_hsl(24_95%_56%_/_0.45)]"
-              >
-                Book nu
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a
-                href="#priser"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo("#priser");
-                }}
-                className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/5 px-9 py-4 font-heading text-base font-semibold text-foreground transition-colors hover:border-primary/30 hover:bg-primary/8"
-              >
-                Se priser
-              </a>
-            </motion.div>
-
-            {/* Trust pills */}
-            <motion.div
-              className="mt-9 flex flex-wrap gap-2.5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.56 }}
-            >
-              {trustPoints.map((point) => (
-                <div
-                  key={point.label}
-                  className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 backdrop-blur-sm"
-                >
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/18">
-                    <point.icon className="h-3 w-3 text-primary" />
-                  </div>
-                  <span className="text-sm font-semibold text-foreground/90">
-                    {point.label}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* ── Right column – product card ── */}
-          <motion.div
-            initial={{ opacity: 0, x: 36, scale: 0.97 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 0.85, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+      <div
+        ref={containerRef}
+        className="relative z-10 container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12 pt-20"
+      >
+        {/* Left — text */}
+        <div className="flex-1 text-center lg:text-left">
+          <motion.p
+            className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-6"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="section-shell relative overflow-hidden rounded-[2.5rem] p-7 md:p-9">
-              {/* Radial gradient accent */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_0%,hsl(24_95%_56%_/_0.22),transparent_45%)]" />
+            Soundboks udlejning i Aalborg
+          </motion.p>
 
-              <div className="relative flex min-h-[34rem] flex-col justify-between gap-6">
-                {/* Top labels */}
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-primary">
-                      Festival klar · Weekend ready
-                    </p>
-                    <p className="mt-2.5 max-w-[13rem] text-sm leading-6 text-muted-foreground">
-                      Kraftig lyd, lang batteritid og en booking uden bøvl.
-                    </p>
-                  </div>
-                  <span className="shrink-0 rounded-full border border-primary/25 bg-primary/8 px-3 py-1.5 text-[0.58rem] font-semibold uppercase tracking-[0.3em] text-primary">
-                    Bluetooth 5.0
-                  </span>
-                </div>
+          <motion.h1
+            className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-2xl mb-6"
+            initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Lej en Soundboks Go<br />
+            <span className="text-primary">i Aalborg &amp; omegn</span>
+          </motion.h1>
 
-                {/* Floating product image */}
-                <div className="relative flex flex-1 items-center justify-center py-2">
-                  <div className="absolute h-72 w-72 rounded-full bg-primary/24 blur-[100px]" />
-                  <div className="absolute inset-x-10 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
-                  <motion.img
-                    src={soundboksFront}
-                    alt="Soundboks Go"
-                    className="relative z-10 max-h-[20rem] w-auto drop-shadow-[0_32px_110px_hsl(24_95%_56%_/_0.35)]"
-                    animate={{ y: [0, -11, 0], rotate: [0, 1.3, 0] }}
-                    transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                </div>
+          <motion.p
+            className="text-muted-foreground text-lg md:text-xl max-w-xl mb-10 lg:mx-0 mx-auto"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.26 }}
+          >
+            Billig højtaler udlejning fra 150 kr/dag – perfekt til fest, events og forsamlinger i Aalborg
+          </motion.p>
 
-                {/* Spec grid */}
-                <div className="grid grid-cols-3 gap-2.5">
-                  {[
-                    { label: "Output", value: "121 dB" },
-                    { label: "Batteri", value: "40 t" },
-                    { label: "Afhentning", value: "Flex" },
-                  ].map((spec) => (
-                    <div
-                      key={spec.label}
-                      className="rounded-[1.2rem] border border-white/8 bg-background/60 px-3 py-3.5 text-center"
-                    >
-                      <p className="text-[0.58rem] uppercase tracking-[0.28em] text-muted-foreground">
-                        {spec.label}
-                      </p>
-                      <p className="mt-1.5 font-heading text-lg font-bold text-foreground md:text-xl">
-                        {spec.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.36 }}
+          >
+            <a
+              href="#booking"
+              onClick={(e) => { e.preventDefault(); scrollTo("#booking"); }}
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-lg hover:opacity-90 transition-all hover:shadow-[0_0_32px_hsl(24_95%_56%_/_0.4)] active:scale-95"
+            >
+              Book nu
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="#priser"
+              onClick={(e) => { e.preventDefault(); scrollTo("#priser"); }}
+              className="inline-flex items-center justify-center px-8 py-4 rounded-lg border border-border text-foreground font-heading font-semibold text-lg hover:bg-secondary transition-all active:scale-95"
+            >
+              Se priser
+            </a>
           </motion.div>
 
+          {/* Trust badges */}
+          <motion.div
+            className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            {[
+              { label: "Fra 150 kr/dag" },
+              { label: "Ingen depositum" },
+              { label: "Levering i Aalborg" },
+            ].map((badge) => (
+              <div
+                key={badge.label}
+                className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2"
+              >
+                <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                <span className="text-sm font-medium text-foreground">{badge.label}</span>
+              </div>
+            ))}
+          </motion.div>
         </div>
+
+        {/* Right — product with orbit rings */}
+        <motion.div
+          className="flex-1 flex justify-center relative"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* Glow behind image */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            animate={{ scale: [1, 1.15, 1] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-64 h-64 md:w-72 md:h-72 rounded-full bg-primary/20 blur-[80px]" />
+          </motion.div>
+
+          {/* Orbit rings */}
+          {ORBIT_RINGS.map((ring, i) => (
+            <motion.div
+              key={i}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              animate={{ rotate: 360 }}
+              transition={{ duration: Math.abs(ring.speed), repeat: Infinity, ease: "linear", direction: ring.speed < 0 ? "reverse" : "normal" }}
+            >
+              <div
+                className="rounded-full"
+                style={{
+                  width: `${ring.size}rem`,
+                  height: `${ring.size}rem`,
+                  border: ring.solid
+                    ? `1px solid hsl(24 95% 56% / ${ring.opacity})`
+                    : `2px solid hsl(24 95% 56% / ${ring.opacity})`,
+                  borderStyle: ring.solid ? "dashed" : "solid",
+                  borderTopColor: `hsl(24 95% 56% / ${ring.opacity * 4})`,
+                }}
+              />
+            </motion.div>
+          ))}
+
+          {/* Floating product image */}
+          <motion.img
+            src={soundboksFront}
+            alt="Soundboks Go"
+            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-[0_0_80px_hsl(24_95%_53%/0.35)] relative z-10"
+            style={{ x: translateX, y: translateY, rotateX, rotateY }}
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.6 }}
+      >
+        <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
+          <motion.div
+            className="w-1 h-2 rounded-full bg-primary"
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+      </motion.div>
     </section>
   );
 };

@@ -2,117 +2,99 @@ import { motion } from "framer-motion";
 import { BadgeDollarSign, MessageCircle, Volume2, Zap } from "lucide-react";
 
 const features = [
-  { icon: Zap, title: "Nem udlejning", desc: "Book hurtigt og få svar uden unødigt bøvl." },
-  { icon: BadgeDollarSign, title: "Fair priser", desc: "God lyd skal ikke koste en formue at få fat i." },
-  { icon: Volume2, title: "Lyd der kan mærkes", desc: "Lille nok til at håndtere, stor nok til at bære festen." },
-  { icon: MessageCircle, title: "Lokal og hurtig kontakt", desc: "Du får en rigtig person, ikke en tung proces." },
+  { icon: Zap, title: "Nem udlejning", desc: "Book hurtigt og nemt – vi klarer resten.", href: "#booking" },
+  { icon: BadgeDollarSign, title: "Billige priser", desc: "Kvalitetslyd uden at sprænge budgettet.", href: "#priser" },
+  { icon: Volume2, title: "Fantastisk lyd", desc: "Soundboks Go leverer kraftig, klar lyd til enhver lejlighed.", href: "#kvalitet" },
+  { icon: MessageCircle, title: "Hurtig kontakt", desc: "Vi svarer hurtigt og booker dig ind på ingen tid.", href: "#kontakt" },
 ];
+
+const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
 const AboutSection = () => {
   return (
-    <section id="om-os" className="px-6 py-20 md:py-28">
-      <div className="mx-auto max-w-7xl">
+    <section id="om-os" className="py-24 px-6 bg-secondary/30 overflow-hidden">
+      <div className="container mx-auto max-w-5xl">
 
-        {/* Pull quote banner */}
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="text-center mb-20 max-w-2xl mx-auto"
+          initial={{ opacity: 0, filter: "blur(10px)", y: 30 }}
+          whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.55 }}
-          className="mb-8 overflow-hidden rounded-[2rem] border border-primary/20 bg-primary/[0.06] px-8 py-7 md:px-12"
+          transition={{ duration: 0.6 }}
         >
-          <p
-            className="font-heading font-bold leading-[1.1] tracking-[-0.03em] text-foreground"
-            style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)" }}
-          >
-            "God lyd skal være{" "}
-            <span className="text-primary">tilgængeligt for alle</span>
-            {" "}— også når budgettet skal give mening."
+          <p className="text-primary font-heading font-medium tracking-widest uppercase text-sm mb-4">
+            Historien bag
           </p>
-          <p className="mt-4 text-sm text-muted-foreground">
-            — Carl, grundlægger af LejDinLyd
-          </p>
+          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">
+            Om <span className="text-primary">LejDinLyd</span>
+          </h2>
+          <div className="space-y-4 text-muted-foreground text-base md:text-lg leading-relaxed">
+            {[
+              <>Det hele startede med en simpel frustration: <span className="text-foreground font-medium">hvorfor skal det koste en formue at få god lyd til en fest?</span></>,
+              <>Som ung nordjysk iværksætter oplevede jeg gang på gang, at vennerne og jeg stod uden ordentlig lyd til vores fester og sammenkomster – enten var det for dyrt at leje, eller også var kvaliteten skuffende. Så jeg tænkte: <span className="text-foreground font-medium">det må kunne gøres bedre.</span></>,
+              <>Derfor grundlagde jeg LejDinLyd – en service hvor alle kan leje en <span className="text-primary font-medium">Soundboks Go</span> til en fair pris, uden bøvl. Ingen komplicerede kontrakter, ingen skjulte gebyrer. Bare fed lyd leveret til døren, klar til at tænde op for stemningen.</>,
+              <>Heroppe i Nordjylland handler vi på tillid og et håndtryk. Det er den måde jeg driver LejDinLyd på – <span className="text-foreground font-medium">tillidsbaseret og ukompliceret.</span> Du får højtaleren, nyder din fest, og leverer den tilbage. Simpelt som det.</>,
+              <span className="text-foreground font-medium">Min mission er enkel: god lyd skal være tilgængelig for alle – uanset budget.</span>,
+            ].map((text, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+              >
+                {text}
+              </motion.p>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_0.92fr]">
+        {/* Divider */}
+        <motion.div
+          className="h-px bg-border mb-20 mx-auto max-w-xs"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        />
 
-          {/* Story card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="section-shell rounded-[2.2rem] p-7 md:p-10"
-          >
-            <span className="eyebrow">Historien bag</span>
-            <h2 className="mt-5 font-heading text-4xl font-bold leading-[1.05] text-foreground md:text-5xl">
-              Om LejDinLyd
-            </h2>
-            <div className="mt-8 space-y-5 text-base leading-8 text-muted-foreground">
-              <p>
-                Det hele startede med en simpel frustration:{" "}
-                <span className="font-semibold text-foreground">
-                  hvorfor skal det koste en formue at få god lyd til en fest?
-                </span>
-              </p>
-              <p>
-                Som ung nordjysk iværksætter oplevede jeg igen og igen, at gode arrangementer
-                blev holdt tilbage af dårlig lyd, urimelige priser eller unødigt bøvl. Derfor
-                blev LejDinLyd bygget som et mere direkte alternativ.
-              </p>
-              <p>
-                Her kan du leje en{" "}
-                <span className="font-semibold text-primary">Soundboks Go</span> til en fair
-                pris, få hurtig respons og vælge den løsning der passer til festen. Ingen
-                komplicerede kontrakter. Ingen skjulte gebyrer.
-              </p>
-              <p className="font-medium text-foreground">
-                Bare fed lyd, når du har brug for den.
-              </p>
-            </div>
-          </motion.div>
+        {/* Why us */}
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, filter: "blur(10px)", y: 30 }}
+          whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3 className="font-heading text-2xl md:text-3xl font-bold">
+            Hvorfor vælge <span className="text-primary">os</span>?
+          </h3>
+        </motion.div>
 
-          {/* Feature grid */}
-          <div className="flex flex-col gap-5">
-            {/* Tagline card */}
-            <div className="section-shell rounded-[2.2rem] p-7">
-              <p className="text-[0.62rem] uppercase tracking-[0.32em] text-primary">
-                Filosofien
-              </p>
-              <p className="mt-4 font-heading text-2xl font-bold leading-[1.2] text-foreground md:text-3xl">
-                Tillidsbaseret, ukompliceret og bygget til lokale fester.
-              </p>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                Lige så let at hente en Soundboks, som det er at blive enig om at holde festen.
-              </p>
-            </div>
-
-            {/* Feature cards */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.42, delay: index * 0.08 }}
-                  className="section-shell rounded-[1.7rem] p-5"
-                >
-                  <div className="mb-3.5 flex h-11 w-11 items-center justify-center rounded-[1rem] bg-primary/14">
-                    <feature.icon className="h-4.5 w-4.5 text-primary" style={{ width: "1.1rem", height: "1.1rem" }} />
-                  </div>
-                  <h3 className="font-heading text-lg font-semibold text-foreground">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
-                    {feature.desc}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
+              className="rounded-2xl border border-border bg-card p-6 text-center group cursor-pointer hover:border-primary/30 transition-colors"
+              onClick={() => scrollTo(feature.href)}
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <feature.icon className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-heading font-semibold text-lg mb-2">{feature.title}</h3>
+              <p className="text-muted-foreground text-sm mb-4">{feature.desc}</p>
+              <span className="inline-flex items-center text-primary text-sm font-medium group-hover:underline">
+                Gå til →
+              </span>
+            </motion.div>
+          ))}
         </div>
+
       </div>
     </section>
   );

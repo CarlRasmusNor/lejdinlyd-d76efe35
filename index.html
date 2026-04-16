@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lej Soundboks i Aalborg – Billig udlejning | LejDinLyd</title>
-    <meta name="description" content="Lej en Soundboks Go i Aalborg og omegn. Nem booking, lave priser fra 150 kr/dag og afhentning på Kjellerupsgade 4. Perfekt til fest og events.">
+    <title>Lej Soundboks i Aalborg & Nordjylland – fra 150 kr/dag | LejDinLyd</title>
+    <meta name="description" content="Lej Soundboks Go i Aalborg og hele Nordjylland fra kun 150 kr/dag. Nem booking, ingen depositum, levering til Aalborg, Nørresundby, Støvring, Nibe og omegn. Perfekt til fest og events.">
     <link rel="icon" type="image/png" href="/favicon.png">
     
     
@@ -13,10 +13,10 @@
     <meta property="og:url" content="https://lej-din-lyd.dk" />
     <meta property="og:site_name" content="LejDinLyd" />
     <link rel="canonical" href="https://lej-din-lyd.dk" />
-    <meta property="og:title" content="Lej Soundboks i Aalborg – Billig udlejning | LejDinLyd">
-    <meta name="twitter:title" content="Lej Soundboks i Aalborg – Billig udlejning | LejDinLyd">
-    <meta property="og:description" content="Lej en Soundboks Go i Aalborg og omegn. Nem booking, lave priser fra 150 kr/dag og afhentning på Kjellerupsgade 4. Perfekt til fest og events.">
-    <meta name="twitter:description" content="Lej en Soundboks Go i Aalborg og omegn. Nem booking, lave priser fra 150 kr/dag og afhentning på Kjellerupsgade 4. Perfekt til fest og events.">
+    <meta property="og:title" content="Lej Soundboks i Aalborg & Nordjylland – fra 150 kr/dag | LejDinLyd">
+    <meta name="twitter:title" content="Lej Soundboks i Aalborg & Nordjylland – fra 150 kr/dag | LejDinLyd">
+    <meta property="og:description" content="Lej Soundboks Go i Aalborg og hele Nordjylland fra kun 150 kr/dag. Nem booking, ingen depositum, levering til Aalborg, Nørresundby, Støvring, Nibe og omegn. Perfekt til fest og events.">
+    <meta name="twitter:description" content="Lej Soundboks Go i Aalborg og hele Nordjylland fra kun 150 kr/dag. Nem booking, ingen depositum, levering til Aalborg, Nørresundby, Støvring, Nibe og omegn. Perfekt til fest og events.">
     <meta name="twitter:image" content="https://lej-din-lyd.dk/og-image.jpg">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -72,14 +72,14 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": ["LocalBusiness", "RentalService"],
       "name": "LejDinLyd",
       "url": "https://lej-din-lyd.dk",
       "logo": "https://lej-din-lyd.dk/favicon.png",
       "image": "https://lej-din-lyd.dk/og-image.jpg",
-      "description": "Lej en Soundboks Go i Aalborg og omegn. Nem booking, lave priser fra 150 kr/dag. Perfekt til fest, konfirmation og events.",
+      "description": "Lej en Soundboks Go i Aalborg og omegn. Nem booking, lave priser fra 150 kr/dag. Perfekt til fest, konfirmation og events. Kunder fra hele Nordjylland velkomne.",
       "telephone": "+4553540096",
-      "email": "kontakt@lej-din-lyd.dk",
+      "email": "rasmuscarl@hotmail.com",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Kjellerupsgade 4",
@@ -92,13 +92,45 @@
         "latitude": 57.0488,
         "longitude": 9.9217
       },
-      "areaServed": {
-        "@type": "City",
-        "name": "Aalborg"
+      "areaServed": [
+        { "@type": "City", "name": "Aalborg" },
+        { "@type": "City", "name": "Nørresundby" },
+        { "@type": "AdministrativeArea", "name": "Nordjylland" }
+      ],
+      "serviceArea": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": 57.0488,
+          "longitude": 9.9217
+        },
+        "geoRadius": "10000"
+      },
+      "makesOffer": {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Soundboks Go udlejning",
+          "description": "Udlejning af Soundboks Go højtaler til fest, events og arrangementer i Nordjylland"
+        },
+        "priceSpecification": [
+          {
+            "@type": "UnitPriceSpecification",
+            "price": "150",
+            "priceCurrency": "DKK",
+            "unitText": "pr. dag (søndag–torsdag)"
+          },
+          {
+            "@type": "UnitPriceSpecification",
+            "price": "300",
+            "priceCurrency": "DKK",
+            "unitText": "pr. dag (fredag–lørdag)"
+          }
+        ]
       },
       "priceRange": "150-300 DKK/dag",
       "currenciesAccepted": "DKK",
-      "paymentAccepted": "Cash",
+      "paymentAccepted": "Cash, MobilePay",
       "openingHours": "Mo-Su 00:00-23:59"
     }
     </script>

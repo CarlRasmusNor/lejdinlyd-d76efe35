@@ -43,7 +43,7 @@ const Navbar = () => {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full border border-white/10 bg-background/75 px-4 shadow-[0_20px_80px_hsl(220_50%_2%_/_0.35)] backdrop-blur-xl md:px-6">
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/12 font-heading text-sm font-bold text-primary">
-            LD
+            LDL
           </div>
           <div className="leading-none">
             <p className="font-heading text-sm font-bold uppercase tracking-[0.25em] text-foreground">
